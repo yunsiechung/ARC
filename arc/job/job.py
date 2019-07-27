@@ -10,6 +10,7 @@ import os
 import csv
 import shutil
 import datetime
+import re
 
 from arc.common import get_logger
 from arc.settings import arc_path, servers, submit_filename, delete_command, t_max_format,\
@@ -774,7 +775,7 @@ $end
                     logger.info('Got the following information from the server:')
                     logger.info(content)
                     for line in content.splitlines():
-                        # example:
+                        # exceed time limit error, example:
                         # slurmstepd: *** JOB 7752164 CANCELLED AT 2019-03-27T00:30:50 DUE TO TIME LIMIT on node096 ***
                         if 'cancelled' in line.lower() and 'due to time limit' in line.lower():
                             logger.warning('Looks like the job was cancelled on {0} due to time limit. '
@@ -783,6 +784,16 @@ $end
                             logger.warning('Setting max job time to {0} (was {1})'.format(new_max_job_time,
                                                                                           self.max_job_time))
                             self.max_job_time = new_max_job_time
+                            node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
+                            server_status = "errored on {0}: exceed time limit".format(node_index)
+                        # node failure error, example:
+                        # slurmstepd: *** JOB 8951759 CANCELLED AT 2019-07-24T02:41:14 DUE TO NODE node025 FAILURE ***
+                        if 'cancelled' in line.lower() and 'due to node' in line.lower():
+                            logger.warning('Looks like the job was cancelled on {0} due to node issue. '
+                                           'Got: {1}'.format(self.server, line))
+                            node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
+                            server_status = "errored on {0}: node failure".format(node_index)
+                        # Need to resubmit the job
                 raise
         elif server_status == 'running':
             ess_status = 'running'
