@@ -786,6 +786,7 @@ $end
                             self.max_job_time = new_max_job_time
                             node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
                             server_status = "errored on {0}: exceed time limit".format(node_index)
+
                         # node failure error, example:
                         # slurmstepd: *** JOB 8951759 CANCELLED AT 2019-07-24T02:41:14 DUE TO NODE node025 FAILURE ***
                         if 'cancelled' in line.lower() and 'due to node' in line.lower():
@@ -794,6 +795,14 @@ $end
                             node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
                             server_status = "errored on {0}: node failure".format(node_index)
                         # Need to resubmit the job
+
+                        # exceed disk quota error, example:
+                        # PGFIO/stdio: Disk quota exceeded
+                        if 'disk quota exceeded' in line.lower():
+                            logger.warning('Looks like the job was cancelled on {0} due to disk quota issue. '
+                                           'Got: {1}'.format(self.server, line))
+                            server_status = "errored : exceed disk quota"
+                        # Subsequent action TBD
                 raise
         elif server_status == 'running':
             ess_status = 'running'
