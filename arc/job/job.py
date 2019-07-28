@@ -930,8 +930,15 @@ $end
                                 reason = 'Memory allocation failed (did you ask for too much?)'
                             elif 'A SYNTAX ERROR WAS DETECTED' in line:
                                 reason = 'Check .inp carefully for syntax errors in keywords.'
+                            # Cases that accidentally has 'Error'
+                            elif 'RMS Error=' in line:
+                                raise JobError("Gaussian job {0} was unexpectedly terminated.".format(self.job_name))
                             return 'errored: {0}; {1}'.format(line, reason)
-                    return 'errored: Unknown reason'
+                        # Cases that the job terminates, either converge or not
+                        if "Job cpu time" in line:
+                            return 'errored: Unknown reason'
+                    # Not complete gaussian file, possible unexpectedly terminated
+                    raise JobError("Gaussian job {0} was unexpectedly terminated.".format(self.job_name))
                 return 'done'
             elif self.software == 'qchem':
                 done = False
