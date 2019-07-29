@@ -1738,24 +1738,24 @@ class Scheduler(object):
 
     def troubleshoot_scan_job(self, job):
         """
-        Try freezing all dihedrals other than the scan's pivots for this job
+        Try increasing resolution and freezing all dihedrals other than the scan's pivots for this job
         """
         label = job.species_name
         species_scan_lists = [rotor_dict['scan'] for rotor_dict in self.species_dict[label].rotors_dict.values()]
         if job.scan not in species_scan_lists:
-            raise SchedulerError('Could not find the dihedral to troubleshoot for in the dcan list of species'
+            raise SchedulerError('Could not find the dihedral to troubleshoot for in the scan list of species'
                                  ' {0}'.format(label))
         species_scan_lists.pop(species_scan_lists.index(job.scan))
         if len(species_scan_lists):
             scan_trsh = '\n'
             for scan in species_scan_lists:
                 scan_trsh += 'D ' + ''.join([str(num) + ' ' for num in scan]) + 'F\n'
-            scan_res = min(4, int(job.scan_res / 2))
-            # make sure mod(360, scan res) is 0:
-            if scan_res not in [4, 2, 1]:
-                scan_res = min([4, 2, 1], key=lambda x: abs(x - scan_res))
-            self.run_job(label=label, xyz=job.xyz, level_of_theory=job.level_of_theory, job_type='scan',
-                         scan=job.scan, pivots=job.pivots, scan_trsh=scan_trsh, scan_res=4)
+        scan_res = min(4, int(job.scan_res / 2))
+        # make sure mod(360, scan res) is 0:
+        if scan_res not in [4, 2, 1]:
+            scan_res = min([4, 2, 1], key=lambda x: abs(x - scan_res))
+        self.run_job(label=label, xyz=job.xyz, level_of_theory=job.level_of_theory, job_type='scan',
+                         scan=job.scan, pivots=job.pivots, scan_trsh=scan_trsh, scan_res=scan_res)
 
     def troubleshoot_opt_jobs(self, label):
         """
