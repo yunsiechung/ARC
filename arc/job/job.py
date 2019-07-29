@@ -794,15 +794,20 @@ $end
                                            'Got: {1}'.format(self.server, line))
                             node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
                             server_status = "errored on {0}: node failure".format(node_index)
-                        # Need to resubmit the job
-
+                raise
+            except JobError:
+                logger.error('Got an JobError when reading output file for job {0}.'.format(self.job_name))
+                content = self._get_additional_job_info()
+                if content:
+                    logger.info('Got the following information from the server:')
+                    logger.info(content)
+                    for line in content.splitlines():
                         # exceed disk quota error, example:
                         # PGFIO/stdio: Disk quota exceeded
                         if 'disk quota exceeded' in line.lower():
                             logger.warning('Looks like the job was cancelled on {0} due to disk quota issue. '
                                            'Got: {1}'.format(self.server, line))
                             server_status = "errored : exceed disk quota"
-                        # Subsequent action TBD
                 raise
         elif server_status == 'running':
             ess_status = 'running'

@@ -636,6 +636,17 @@ class Scheduler(object):
                              max_job_time=job.max_job_time)
             if job_name in self.running_jobs[label]:
                 self.running_jobs[label].pop(self.running_jobs[label].index(job_name))
+        except JobError:
+            if job.job_type not in ['orbitals']:
+                logger.warning('Tried to determine status of job {0}, but it seems like the job terminated without completion.'
+                               ' Re-running job.'.format(job.job_name))
+                self.run_job(label=label, xyz=job.xyz, level_of_theory=job.level_of_theory, job_type=job.job_type,
+                             fine=job.fine, software=job.software, shift=job.shift, trsh=job.trsh, memory=job.memory_gb,
+                             conformer=job.conformer, ess_trsh_methods=job.ess_trsh_methods, scan=job.scan,
+                             pivots=job.pivots, occ=job.occ, scan_trsh=job.scan_trsh, scan_res=job.scan_res,
+                             max_job_time=job.max_job_time)
+            if job_name in self.running_jobs[label]:
+                self.running_jobs[label].pop(self.running_jobs[label].index(job_name))
         if job.job_status[0] != 'running' and job.job_status[1] != 'running':
             if job_name in self.running_jobs[label]:
                 self.running_jobs[label].pop(self.running_jobs[label].index(job_name))
