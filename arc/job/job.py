@@ -761,7 +761,7 @@ $end
 
     def determine_job_status(self):
         """Determine the Job's status"""
-        if self.job_status[0] == 'errored':
+        if 'error' in self.job_status[0]:
             return
         server_status = self._check_job_server_status()
         ess_status = ''
@@ -785,15 +785,18 @@ $end
                                                                                           self.max_job_time))
                             self.max_job_time = new_max_job_time
                             node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
-                            server_status = "errored on {0}: exceed time limit".format(node_index)
-
+                            self.job_status = ["errored on {0}: exceed time limit".format(node_index), ""]
+                            break
                         # node failure error, example:
                         # slurmstepd: *** JOB 8951759 CANCELLED AT 2019-07-24T02:41:14 DUE TO NODE node025 FAILURE ***
-                        if 'cancelled' in line.lower() and 'due to node' in line.lower():
+                        elif 'cancelled' in line.lower() and 'due to node' in line.lower():
                             logger.warning('Looks like the job was cancelled on {0} due to node issue. '
                                            'Got: {1}'.format(self.server, line))
                             node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
-                            server_status = "errored on {0}: node failure".format(node_index)
+                            self.job_status = ["errored on {0}: node failure".format(node_index), ""]
+                            break
+                else:
+                    self.job_status = ["errored: unknown reason", ""]
                 raise
             except JobError:
                 logger.error('Got an JobError when reading output file for job {0}.'.format(self.job_name))
@@ -807,7 +810,30 @@ $end
                         if 'disk quota exceeded' in line.lower():
                             logger.warning('Looks like the job was cancelled on {0} due to disk quota issue. '
                                            'Got: {1}'.format(self.server, line))
-                            server_status = "errored : exceed disk quota"
+                            self.job_status = ["errored : exceed disk quota", ""]
+                            break
+                        # exceed time limit error, example:
+                        # slurmstepd: *** JOB 7752164 CANCELLED AT 2019-03-27T00:30:50 DUE TO TIME LIMIT on node096 ***
+                        elif 'cancelled' in line.lower() and 'due to time limit' in line.lower():
+                            logger.warning('Looks like the job was cancelled on {0} due to time limit. '
+                                           'Got: {1}'.format(self.server, line))
+                            new_max_job_time = self.max_job_time - 24 if self.max_job_time > 25 else 1
+                            logger.warning('Setting max job time to {0} (was {1})'.format(new_max_job_time,
+                                                                                          self.max_job_time))
+                            self.max_job_time = new_max_job_time
+                            node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
+                            self.job_status = ["errored on {0}: exceed time limit".format(node_index), ""]
+                            break
+                        # node failure error, example:
+                        # slurmstepd: *** JOB 8951759 CANCELLED AT 2019-07-24T02:41:14 DUE TO NODE node025 FAILURE ***
+                        elif 'cancelled' in line.lower() and 'due to node' in line.lower():
+                            logger.warning('Looks like the job was cancelled on {0} due to node issue. '
+                                           'Got: {1}'.format(self.server, line))
+                            node_index = re.search(" node[0-9]+ ", line.lower()).group()[1:-1]
+                            self.job_status = ["errored on {0}: node failure".format(node_index), ""]
+                            break
+                else:
+                    self.job_status = ["errored: unknown reason", ""]
                 raise
         elif server_status == 'running':
             ess_status = 'running'
@@ -855,7 +881,7 @@ $end
             else:
                 response = execute_command('ls -alF {0}'.format(self.local_path))
             files = list()
-            for line in response[0][0].splitlines():
+            for line in response[0]:
                 files.append(line.split()[-1])
             for file_name in files:
                 if 'slurm' in file_name and '.out' in file_name:

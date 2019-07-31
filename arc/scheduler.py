@@ -27,7 +27,7 @@ import arc.rmgdb as rmgdb
 from arc import plotter
 from arc import parser
 from arc.job.job import Job
-from arc.arc_exceptions import SpeciesError, SchedulerError, TSError, SanitizationError
+from arc.arc_exceptions import SpeciesError, SchedulerError, TSError, SanitizationError, JobError
 from arc.job.ssh import SSHClient
 from arc.job.local import check_running_jobs_ids
 from arc.species.species import ARCSpecies, TSGuess, determine_rotor_symmetry
