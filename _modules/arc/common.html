@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.common &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">ARC’s API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>arc.common</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for arc.common</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions which are shared across multiple ARC modules.</span>
+<span class="sd">As such, it should not import any other ARC module (specifically ones that use logging) to avoid circular imports.</span>
+
+<span class="sd">VERSION is the full ARC version, using `semantic versioning &lt;https://semver.org/&gt;`_.</span>
+
+<span class="sd">ATOM_RADII data taken from `DOI 10.1039/b801115j &lt;http://dx.doi.org/10.1039/b801115j&gt;`_.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">rmgpy.molecule.element</span> <span class="k">import</span> <span class="n">getElement</span>
+<span class="kn">from</span> <span class="nn">rmgpy.qm.qmdata</span> <span class="k">import</span> <span class="n">QMData</span>
+<span class="kn">from</span> <span class="nn">rmgpy.qm.symmetry</span> <span class="k">import</span> <span class="n">PointGroupCalculator</span>
+
+<span class="kn">from</span> <span class="nn">arc.settings</span> <span class="k">import</span> <span class="n">arc_path</span><span class="p">,</span> <span class="n">servers</span>
+<span class="kn">from</span> <span class="nn">arc.arc_exceptions</span> <span class="k">import</span> <span class="n">InputError</span><span class="p">,</span> <span class="n">SettingsError</span>
+
+<span class="c1">##################################################################</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;arc&#39;</span><span class="p">)</span>
+
+<span class="n">VERSION</span> <span class="o">=</span> <span class="s1">&#39;1.1.0&#39;</span>
+
+
+<div class="viewcode-block" id="time_lapse"><a class="viewcode-back" href="../../api/common.html#arc.common.time_lapse">[docs]</a><span class="k">def</span> <span class="nf">time_lapse</span><span class="p">(</span><span class="n">t0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function returning the elapsed time since t0.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        t0 (time.pyi): The initial time the count starts from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A &quot;D HH:MM:SS&quot; formatted time difference between now and t0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">d</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; days, &#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}{1:02.0f}</span><span class="s1">:</span><span class="si">{2:02.0f}</span><span class="s1">:</span><span class="si">{3:02.0f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="check_ess_settings"><a class="viewcode-back" href="../../api/common.html#arc.common.check_ess_settings">[docs]</a><span class="k">def</span> <span class="nf">check_ess_settings</span><span class="p">(</span><span class="n">ess_settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function to convert servers in the ess_settings dict to lists</span>
+<span class="sd">    Assists in troubleshooting job and trying a different server</span>
+<span class="sd">    Also check ESS and servers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ess_settings (dict, optional): ARC&#39;s ESS settings dictionary.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: An updated ARC ESS dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ess_settings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ess_settings</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">software</span><span class="p">,</span> <span class="n">server_list</span> <span class="ow">in</span> <span class="n">ess_settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">server_list</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+            <span class="n">settings</span><span class="p">[</span><span class="n">software</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">server_list</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">server_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">server</span> <span class="ow">in</span> <span class="n">server_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+                    <span class="k">raise</span> <span class="n">SettingsError</span><span class="p">(</span><span class="s1">&#39;Server name could only be a string. &#39;</span>
+                                        <span class="s1">&#39;Got </span><span class="si">{0}</span><span class="s1"> which is </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">server</span><span class="p">)))</span>
+                <span class="n">settings</span><span class="p">[</span><span class="n">software</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">server_list</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SettingsError</span><span class="p">(</span><span class="s1">&#39;Servers in the ess_settings dictionary could either be a string or a list of &#39;</span>
+                                <span class="s1">&#39;strings. Got: </span><span class="si">{0}</span><span class="s1"> which is a </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">server_list</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">server_list</span><span class="p">)))</span>
+    <span class="c1"># run checks:</span>
+    <span class="k">for</span> <span class="n">ess</span><span class="p">,</span> <span class="n">server_list</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">ess</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="s1">&#39;qchem&#39;</span><span class="p">,</span> <span class="s1">&#39;molpro&#39;</span><span class="p">,</span> <span class="s1">&#39;orca&#39;</span><span class="p">,</span> <span class="s1">&#39;terachem&#39;</span><span class="p">,</span> <span class="s1">&#39;onedmin&#39;</span><span class="p">,</span> <span class="s1">&#39;gromacs&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">SettingsError</span><span class="p">(</span><span class="s1">&#39;Recognized ESS software are Gaussian, QChem, Molpro, Orca or OneDMin. &#39;</span>
+                                <span class="s1">&#39;Got: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ess</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">server</span> <span class="ow">in</span> <span class="n">server_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">server</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">servers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">server_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">servers</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+                <span class="k">raise</span> <span class="n">SettingsError</span><span class="p">(</span><span class="s1">&#39;Recognized servers are </span><span class="si">{0}</span><span class="s1">. Got: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">server_names</span><span class="p">,</span> <span class="n">server</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Using the following ESS settings:</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">settings</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">settings</span></div>
+
+
+<div class="viewcode-block" id="initialize_log"><a class="viewcode-back" href="../../api/common.html#arc.common.initialize_log">[docs]</a><span class="k">def</span> <span class="nf">initialize_log</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">project_directory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set up a logger for ARC.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        log_file (str): The log file name.</span>
+<span class="sd">        project (str): A name for the project.</span>
+<span class="sd">        project_directory (str, optional): The path to the project directory.</span>
+<span class="sd">        verbose (int, optional): Specify the amount of log text seen.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># backup and delete an existing log file if needed</span>
+    <span class="k">if</span> <span class="n">project_directory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">log_file</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;log_and_restart_archive&#39;</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;log_and_restart_archive&#39;</span><span class="p">))</span>
+        <span class="n">local_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M%S_%b</span><span class="si">%d</span><span class="s2">_%Y&quot;</span><span class="p">)</span>
+        <span class="n">log_backup_name</span> <span class="o">=</span> <span class="s1">&#39;arc.old.&#39;</span> <span class="o">+</span> <span class="n">local_time</span> <span class="o">+</span> <span class="s1">&#39;.log&#39;</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;log_and_restart_archive&#39;</span><span class="p">,</span> <span class="n">log_backup_name</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">propagate</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Use custom level names for cleaner log output</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="s1">&#39;Critical: &#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="s1">&#39;Error: &#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="s1">&#39;Warning: &#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">addLevelName</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create formatter and add to handlers</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(levelname)s%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Remove old handlers before adding ours</span>
+    <span class="k">while</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Create console handler; send everything to stdout rather than stderr</span>
+    <span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+
+    <span class="c1"># Create file handler</span>
+    <span class="n">fh</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+    <span class="n">log_header</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">project</span><span class="p">)</span>
+
+    <span class="c1"># ignore Paramiko and cclib warnings:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;.*paramiko.*&#39;</span><span class="p">)</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s1">&#39;.*cclib.*&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">captureWarnings</span><span class="p">(</span><span class="n">capture</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_logger"><a class="viewcode-back" href="../../api/common.html#arc.common.get_logger">[docs]</a><span class="k">def</span> <span class="nf">get_logger</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the ARC logger (avoid having multiple entries of the logger).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="log_header"><a class="viewcode-back" href="../../api/common.html#arc.common.log_header">[docs]</a><span class="k">def</span> <span class="nf">log_header</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Output a header containing identifying information about ARC to the log.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        project (str): The ARC project name to be logged in the header.</span>
+<span class="sd">        level: The desired logging level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;ARC execution initiated on </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">asctime</span><span class="p">()))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;###############################################################&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;#                                                             #&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;#                 Automatic Rate Calculator                   #&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;#                            ARC                              #&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;#                                                             #&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;#   Version: </span><span class="si">{0}{1}</span><span class="s1">                                       #&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">VERSION</span><span class="p">,</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">VERSION</span><span class="p">))))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;#                                                             #&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;###############################################################&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Extract HEAD git commit from ARC</span>
+    <span class="n">head</span><span class="p">,</span> <span class="n">date</span> <span class="o">=</span> <span class="n">get_git_commit</span><span class="p">()</span>
+    <span class="n">branch_name</span> <span class="o">=</span> <span class="n">get_git_branch</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">head</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="n">date</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;The current git HEAD for ARC is:&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;    </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">    </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">date</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">branch_name</span> <span class="ow">and</span> <span class="n">branch_name</span> <span class="o">!=</span> <span class="s1">&#39;master&#39;</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;    (running on the </span><span class="si">{0}</span><span class="s1"> branch)</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">branch_name</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting project </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_git_commit"><a class="viewcode-back" href="../../api/common.html#arc.common.get_git_commit">[docs]</a><span class="k">def</span> <span class="nf">get_git_commit</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the recent git commit to be logged.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Returns empty strings if hash and date cannot be determined.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: The git HEAD commit hash and the git HEAD commit date, each as a string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arc_path</span><span class="p">,</span> <span class="s1">&#39;.git&#39;</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;--format=%H%n</span><span class="si">%c</span><span class="s1">d&#39;</span><span class="p">,</span> <span class="s1">&#39;-1&#39;</span><span class="p">],</span> <span class="n">cwd</span><span class="o">=</span><span class="n">arc_path</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="get_git_branch"><a class="viewcode-back" href="../../api/common.html#arc.common.get_git_branch">[docs]</a><span class="k">def</span> <span class="nf">get_git_branch</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the git branch to be logged.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The git branch name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arc_path</span><span class="p">,</span> <span class="s1">&#39;.git&#39;</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">branch_list</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;branch&#39;</span><span class="p">],</span> <span class="n">cwd</span><span class="o">=</span><span class="n">arc_path</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">branch_name</span> <span class="ow">in</span> <span class="n">branch_list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">branch_name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">branch_name</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="log_footer"><a class="viewcode-back" href="../../api/common.html#arc.common.log_footer">[docs]</a><span class="k">def</span> <span class="nf">log_footer</span><span class="p">(</span><span class="n">execution_time</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Output a footer for the log.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        execution_time (str): The overall execution time for ARC.</span>
+<span class="sd">        level: The desired logging level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;Total execution time: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">execution_time</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s1">&#39;ARC execution terminated on </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">asctime</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="read_yaml_file"><a class="viewcode-back" href="../../api/common.html#arc.common.read_yaml_file">[docs]</a><span class="k">def</span> <span class="nf">read_yaml_file</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read a YAML file (usually an input / restart file, but also conformers file)</span>
+<span class="sd">    and return the parameters as python variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The YAML file path to read.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict or list: The content read from the file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Could not find the YAML file </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">content</span></div>
+
+
+<div class="viewcode-block" id="save_yaml_file"><a class="viewcode-back" href="../../api/common.html#arc.common.save_yaml_file">[docs]</a><span class="k">def</span> <span class="nf">save_yaml_file</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save a YAML file (usually an input / restart file, but also conformers file)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The YAML file path to save.</span>
+<span class="sd">        content (str): The content to save.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">string_representer</span><span class="p">)</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="n">unicode</span><span class="p">,</span> <span class="n">unicode_representer</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Creating a restart file...&#39;</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">,</span> <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="string_representer"><a class="viewcode-back" href="../../api/common.html#arc.common.string_representer">[docs]</a><span class="k">def</span> <span class="nf">string_representer</span><span class="p">(</span><span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a custom string representer to use block literals for multiline strings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;tag:yaml.org,2002:str&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_scalar</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;tag:yaml.org,2002:str&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="unicode_representer"><a class="viewcode-back" href="../../api/common.html#arc.common.unicode_representer">[docs]</a><span class="k">def</span> <span class="nf">unicode_representer</span><span class="p">(</span><span class="n">dumper</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add a custom unicode representer to use block literals for multiline strings in unicode.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">ScalarNode</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;tag:yaml.org,2002:str&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">ScalarNode</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="s1">&#39;tag:yaml.org,2002:str&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_ordinal_indicator"><a class="viewcode-back" href="../../api/common.html#arc.common.get_ordinal_indicator">[docs]</a><span class="k">def</span> <span class="nf">get_ordinal_indicator</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the ordinal indicator for an integer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        number (int): An integer for which the ordinal indicator will be determined.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The integer&#39;s ordinal indicator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ordinal_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;st&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;nd&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;rd&#39;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">13</span><span class="p">:</span>
+        <span class="n">number</span> <span class="o">%=</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">ordinal_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">ordinal_dict</span><span class="p">[</span><span class="n">number</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s1">&#39;th&#39;</span></div>
+
+
+<span class="n">ATOM_RADII</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;H&#39;</span><span class="p">:</span> <span class="mf">0.31</span><span class="p">,</span> <span class="s1">&#39;He&#39;</span><span class="p">:</span> <span class="mf">0.28</span><span class="p">,</span>
+              <span class="s1">&#39;Li&#39;</span><span class="p">:</span> <span class="mf">1.28</span><span class="p">,</span> <span class="s1">&#39;Be&#39;</span><span class="p">:</span> <span class="mf">0.96</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="mf">0.84</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="mf">0.76</span><span class="p">,</span> <span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="mf">0.71</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span> <span class="mf">0.66</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">:</span> <span class="mf">0.57</span><span class="p">,</span> <span class="s1">&#39;Ne&#39;</span><span class="p">:</span> <span class="mf">0.58</span><span class="p">,</span>
+              <span class="s1">&#39;Na&#39;</span><span class="p">:</span> <span class="mf">1.66</span><span class="p">,</span> <span class="s1">&#39;Mg&#39;</span><span class="p">:</span> <span class="mf">1.41</span><span class="p">,</span> <span class="s1">&#39;Al&#39;</span><span class="p">:</span> <span class="mf">1.21</span><span class="p">,</span> <span class="s1">&#39;Si&#39;</span><span class="p">:</span> <span class="mf">1.11</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="mf">1.07</span><span class="p">,</span> <span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="mf">1.05</span><span class="p">,</span> <span class="s1">&#39;Cl&#39;</span><span class="p">:</span> <span class="mf">1.02</span><span class="p">,</span> <span class="s1">&#39;Ar&#39;</span><span class="p">:</span> <span class="mf">1.06</span><span class="p">,</span>
+              <span class="s1">&#39;K&#39;</span><span class="p">:</span> <span class="mf">2.03</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">:</span> <span class="mf">1.76</span><span class="p">,</span> <span class="s1">&#39;Sc&#39;</span><span class="p">:</span> <span class="mf">1.70</span><span class="p">,</span> <span class="s1">&#39;Ti&#39;</span><span class="p">:</span> <span class="mf">1.60</span><span class="p">,</span> <span class="s1">&#39;V&#39;</span><span class="p">:</span> <span class="mf">1.53</span><span class="p">,</span> <span class="s1">&#39;Cr&#39;</span><span class="p">:</span> <span class="mf">1.39</span><span class="p">,</span> <span class="s1">&#39;Mn&#39;</span><span class="p">:</span> <span class="mf">1.39</span><span class="p">,</span> <span class="s1">&#39;Fe&#39;</span><span class="p">:</span> <span class="mf">1.32</span><span class="p">,</span>
+              <span class="s1">&#39;Co&#39;</span><span class="p">:</span> <span class="mf">1.26</span><span class="p">,</span> <span class="s1">&#39;Ni&#39;</span><span class="p">:</span> <span class="mf">1.24</span><span class="p">,</span> <span class="s1">&#39;Cu&#39;</span><span class="p">:</span> <span class="mf">1.32</span><span class="p">,</span> <span class="s1">&#39;Zn&#39;</span><span class="p">:</span> <span class="mf">1.22</span><span class="p">,</span> <span class="s1">&#39;Ga&#39;</span><span class="p">:</span> <span class="mf">1.22</span><span class="p">,</span> <span class="s1">&#39;Ge&#39;</span><span class="p">:</span> <span class="mf">1.20</span><span class="p">,</span> <span class="s1">&#39;As&#39;</span><span class="p">:</span> <span class="mf">1.19</span><span class="p">,</span>
+              <span class="s1">&#39;Se&#39;</span><span class="p">:</span> <span class="mf">1.20</span><span class="p">,</span> <span class="s1">&#39;Br&#39;</span><span class="p">:</span> <span class="mf">1.20</span><span class="p">,</span> <span class="s1">&#39;Kr&#39;</span><span class="p">:</span> <span class="mf">1.16</span><span class="p">,</span> <span class="s1">&#39;Rb&#39;</span><span class="p">:</span> <span class="mf">2.20</span><span class="p">,</span> <span class="s1">&#39;Sr&#39;</span><span class="p">:</span> <span class="mf">1.95</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="mf">1.90</span><span class="p">,</span> <span class="s1">&#39;Zr&#39;</span><span class="p">:</span> <span class="mf">1.75</span><span class="p">,</span>
+              <span class="s1">&#39;Nb&#39;</span><span class="p">:</span> <span class="mf">1.64</span><span class="p">,</span> <span class="s1">&#39;Mo&#39;</span><span class="p">:</span> <span class="mf">1.54</span><span class="p">,</span> <span class="s1">&#39;Tc&#39;</span><span class="p">:</span> <span class="mf">1.47</span><span class="p">,</span> <span class="s1">&#39;Ru&#39;</span><span class="p">:</span> <span class="mf">1.46</span><span class="p">,</span> <span class="s1">&#39;Rh&#39;</span><span class="p">:</span> <span class="mf">1.42</span><span class="p">,</span> <span class="s1">&#39;Pd&#39;</span><span class="p">:</span> <span class="mf">1.39</span><span class="p">,</span> <span class="s1">&#39;Ag&#39;</span><span class="p">:</span> <span class="mf">1.45</span><span class="p">,</span>
+              <span class="s1">&#39;Cd&#39;</span><span class="p">:</span> <span class="mf">1.44</span><span class="p">,</span> <span class="s1">&#39;In&#39;</span><span class="p">:</span> <span class="mf">1.42</span><span class="p">,</span> <span class="s1">&#39;Sn&#39;</span><span class="p">:</span> <span class="mf">1.39</span><span class="p">,</span> <span class="s1">&#39;Sb&#39;</span><span class="p">:</span> <span class="mf">1.39</span><span class="p">,</span> <span class="s1">&#39;Te&#39;</span><span class="p">:</span> <span class="mf">1.38</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">:</span> <span class="mf">1.39</span><span class="p">,</span> <span class="s1">&#39;Xe&#39;</span><span class="p">:</span> <span class="mf">1.40</span><span class="p">,</span>
+              <span class="s1">&#39;Cs&#39;</span><span class="p">:</span> <span class="mf">2.44</span><span class="p">,</span> <span class="s1">&#39;Ba&#39;</span><span class="p">:</span> <span class="mf">2.15</span><span class="p">,</span> <span class="s1">&#39;Pt&#39;</span><span class="p">:</span> <span class="mf">1.36</span><span class="p">,</span> <span class="s1">&#39;Au&#39;</span><span class="p">:</span> <span class="mf">1.36</span><span class="p">,</span> <span class="s1">&#39;Hg&#39;</span><span class="p">:</span> <span class="mf">1.32</span><span class="p">,</span> <span class="s1">&#39;Tl&#39;</span><span class="p">:</span> <span class="mf">1.45</span><span class="p">,</span> <span class="s1">&#39;Pb&#39;</span><span class="p">:</span> <span class="mf">1.46</span><span class="p">,</span>
+              <span class="s1">&#39;Bi&#39;</span><span class="p">:</span> <span class="mf">1.48</span><span class="p">,</span> <span class="s1">&#39;Po&#39;</span><span class="p">:</span> <span class="mf">1.40</span><span class="p">,</span> <span class="s1">&#39;At&#39;</span><span class="p">:</span> <span class="mf">1.50</span><span class="p">,</span> <span class="s1">&#39;Rn&#39;</span><span class="p">:</span> <span class="mf">1.50</span><span class="p">,</span> <span class="s1">&#39;Fr&#39;</span><span class="p">:</span> <span class="mf">2.60</span><span class="p">,</span> <span class="s1">&#39;Ra&#39;</span><span class="p">:</span> <span class="mf">2.21</span><span class="p">,</span> <span class="s1">&#39;U&#39;</span><span class="p">:</span> <span class="mf">1.96</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_atom_radius"><a class="viewcode-back" href="../../api/common.html#arc.common.get_atom_radius">[docs]</a><span class="k">def</span> <span class="nf">get_atom_radius</span><span class="p">(</span><span class="n">symbol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the atom covalent radius in Angstroms, data in the ATOM_RADII dict.</span>
+<span class="sd">    (Change to QCElemental after transitioning to Py3)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        symbol (str): The atomic symbol.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The atomic covalent radius (None if not found).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;the symbol argument must be string, got </span><span class="si">{0}</span><span class="s1"> which is a </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">symbol</span><span class="p">)))</span>
+
+    <span class="k">if</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">ATOM_RADII</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ATOM_RADII</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="determine_symmetry"><a class="viewcode-back" href="../../api/common.html#arc.common.determine_symmetry">[docs]</a><span class="k">def</span> <span class="nf">determine_symmetry</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">symbols</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine external symmetry and chirality (optical isomers) of the species.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coords (list): The 3D coordinates of a molecule in array-format.</span>
+<span class="sd">        symbols (list): Entries are atomic symbols correcponding to coords.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The external symmetry number.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        int: 1 if no chiral centers are present, 2 if chiral centers are present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">atom_numbers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>  <span class="c1"># List of atomic numbers</span>
+    <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">symbols</span><span class="p">:</span>
+        <span class="n">atom_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">getElement</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">symbol</span><span class="p">))</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>  <span class="c1"># N x 3 numpy.ndarray of atomic coordinates</span>
+    <span class="c1">#  in the same order as `atom_numbers`</span>
+    <span class="n">unique_id</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span>  <span class="c1"># Just some name that the SYMMETRY code gives to one of its jobs</span>
+    <span class="n">scr_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arc_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;scratch&#39;</span><span class="p">))</span>  <span class="c1"># Scratch directory that the SYMMETRY code writes its files in</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">scr_dir</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">scr_dir</span><span class="p">)</span>
+    <span class="n">symmetry</span> <span class="o">=</span> <span class="n">optical_isomers</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">qmdata</span> <span class="o">=</span> <span class="n">QMData</span><span class="p">(</span>
+        <span class="n">groundStateDegeneracy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># Only needed to check if valid QMData</span>
+        <span class="n">numberOfAtoms</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">atom_numbers</span><span class="p">),</span>
+        <span class="n">atomicNumbers</span><span class="o">=</span><span class="n">atom_numbers</span><span class="p">,</span>
+        <span class="n">atomCoords</span><span class="o">=</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;angstrom&#39;</span><span class="p">)),</span>
+        <span class="n">energy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;kcal/mol&#39;</span><span class="p">))</span>  <span class="c1"># Only needed to avoid error</span>
+    <span class="p">)</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span> <span class="p">(),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">symmetryPath</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;symmetry&#39;</span><span class="p">),</span> <span class="n">scratchDirectory</span><span class="o">=</span><span class="n">scr_dir</span><span class="p">))()</span>
+    <span class="n">pgc</span> <span class="o">=</span> <span class="n">PointGroupCalculator</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">unique_id</span><span class="p">,</span> <span class="n">qmdata</span><span class="p">)</span>
+    <span class="n">pg</span> <span class="o">=</span> <span class="n">pgc</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">pg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">symmetry</span> <span class="o">=</span> <span class="n">pg</span><span class="o">.</span><span class="n">symmetryNumber</span>
+        <span class="n">optical_isomers</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">pg</span><span class="o">.</span><span class="n">chiral</span> <span class="k">else</span> <span class="n">optical_isomers</span>
+    <span class="k">return</span> <span class="n">symmetry</span><span class="p">,</span> <span class="n">optical_isomers</span></div>
+
+
+<div class="viewcode-block" id="min_list"><a class="viewcode-back" href="../../api/common.html#arc.common.min_list">[docs]</a><span class="k">def</span> <span class="nf">min_list</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function for finding the minimum of a list of integers where some of the entries might be None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">([</span><span class="n">entry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">lst</span> <span class="k">if</span> <span class="n">entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

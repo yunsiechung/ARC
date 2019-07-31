@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.job.local &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="arc.parser" href="parser.html" />
+    <link rel="prev" title="arc.job.ssh" href="ssh.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../output.html">Output</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ARC’s API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">arc.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="species.html">arc.species.species</a></li>
+<li class="toctree-l2"><a class="reference internal" href="converter.html">arc.species.converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformers.html">arc.species.conformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reaction.html">arc.reaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html">arc.scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.html">arc.job.job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">arc.job.ssh</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">arc.job.local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">arc.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">arc.plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processor.html">arc.processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmgdb.html">arc.rmgdb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">arc.common</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">ARC’s API</a> &raquo;</li>
+        
+      <li>arc.job.local</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/local.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-arc.job.local">
+<span id="arc-job-local"></span><span id="local"></span><h1>arc.job.local<a class="headerlink" href="#module-arc.job.local" title="Permalink to this headline">¶</a></h1>
+<p>A module for running jobs on the local machine.
+When transitioning to Python 3, use
+<a class="reference external" href="https://docs.python.org/3/library/subprocess.html#subprocess.run">subprocess.run()</a></p>
+<dl class="function">
+<dt id="arc.job.local.check_job_status">
+<code class="descclassname">arc.job.local.</code><code class="descname">check_job_status</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#check_job_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.check_job_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Possible statuses: <cite>before_submission</cite>, <cite>running</cite>, <cite>errored on node xx</cite>, <cite>done</cite>
+Status line formats:</p>
+<p>OGE:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">540420</span> <span class="mf">0.45326</span> <span class="n">xq1340b</span>    <span class="n">user_name</span>       <span class="n">r</span>     <span class="mi">10</span><span class="o">/</span><span class="mi">26</span><span class="o">/</span><span class="mi">2018</span> <span class="mi">11</span><span class="p">:</span><span class="mi">08</span><span class="p">:</span><span class="mi">30</span> <span class="n">long1</span><span class="nd">@node18</span><span class="o">.</span><span class="n">cluster</span>
+</pre></div>
+</div>
+<p>Slurm:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">14428</span>     <span class="n">debug</span> <span class="n">xq1371m2</span>   <span class="n">user_name</span>  <span class="n">R</span> <span class="mi">50</span><span class="o">-</span><span class="mi">04</span><span class="p">:</span><span class="mi">04</span><span class="p">:</span><span class="mi">46</span>      <span class="mi">1</span> <span class="n">node06</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.check_running_jobs_ids">
+<code class="descclassname">arc.job.local.</code><code class="descname">check_running_jobs_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#check_running_jobs_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.check_running_jobs_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of <code class="docutils literal notranslate"><span class="pre">int</span></code> representing job IDs of all jobs submitted by the user on a server</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.delete_all_local_arc_jobs">
+<code class="descclassname">arc.job.local.</code><code class="descname">delete_all_local_arc_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#delete_all_local_arc_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.delete_all_local_arc_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all ARC-spawned jobs (with job name starting with <cite>a</cite> and a digit) from the local server.
+Make sure you know what you’re doing, so unrelated jobs won’t be deleted…
+Useful when terminating ARC while some (ghost) jobs are still running.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.delete_job">
+<code class="descclassname">arc.job.local.</code><code class="descname">delete_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#delete_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.delete_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a running job</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.execute_command">
+<code class="descclassname">arc.job.local.</code><code class="descname">execute_command</code><span class="sig-paren">(</span><em>command</em>, <em>shell=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#execute_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.execute_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a command. <cite>command</cite> is an array of string commands to send.
+If path is not an empty string, the command will be executed in the directory path it points to.
+Returns lists of stdin, stdout, stderr corresponding to the commands sent.
+<cite>shell</cite> specifies whether the command should be executed using bash instead of Python</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.get_last_modified_time">
+<code class="descclassname">arc.job.local.</code><code class="descname">get_last_modified_time</code><span class="sig-paren">(</span><em>file_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#get_last_modified_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.get_last_modified_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the last modified time of <cite>file_path</cite> in a datetime format</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.rename_output">
+<code class="descclassname">arc.job.local.</code><code class="descname">rename_output</code><span class="sig-paren">(</span><em>local_file_path</em>, <em>software</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#rename_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.rename_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rename the output file to “output.out” for consistency between software
+<cite>local_file_path</cite> is the full path to the output.out file,
+<cite>software</cite> is the software used for the job by which the original output file name is determined</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.submit_job">
+<code class="descclassname">arc.job.local.</code><code class="descname">submit_job</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#submit_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.submit_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a job
+<cite>path</cite> is the job’s folder path, where the submit script is located (without the submit script file name)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.job.local.write_file">
+<code class="descclassname">arc.job.local.</code><code class="descname">write_file</code><span class="sig-paren">(</span><em>file_path</em>, <em>file_string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/job/local.html#write_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.job.local.write_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <cite>file_string</cite> as the file’s content in <cite>file_path</cite></p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="parser.html" class="btn btn-neutral float-right" title="arc.parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ssh.html" class="btn btn-neutral float-left" title="arc.job.ssh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

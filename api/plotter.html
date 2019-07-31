@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.plotter &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="arc.processor" href="processor.html" />
+    <link rel="prev" title="arc.parser" href="parser.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../output.html">Output</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ARC’s API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">arc.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="species.html">arc.species.species</a></li>
+<li class="toctree-l2"><a class="reference internal" href="converter.html">arc.species.converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformers.html">arc.species.conformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reaction.html">arc.reaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html">arc.scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.html">arc.job.job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">arc.job.ssh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local.html">arc.job.local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">arc.parser</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">arc.plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processor.html">arc.processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmgdb.html">arc.rmgdb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">arc.common</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">ARC’s API</a> &raquo;</li>
+        
+      <li>arc.plotter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/plotter.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-arc.plotter">
+<span id="arc-plotter"></span><span id="plotter"></span><h1>arc.plotter<a class="headerlink" href="#module-arc.plotter" title="Permalink to this headline">¶</a></h1>
+<p>A module for plotting and saving output files such as RMG libraries.</p>
+<dl class="function">
+<dt id="arc.plotter.check_xyz_species_for_drawing">
+<code class="descclassname">arc.plotter.</code><code class="descname">check_xyz_species_for_drawing</code><span class="sig-paren">(</span><em>xyz</em>, <em>species</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#check_xyz_species_for_drawing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.check_xyz_species_for_drawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for checking the coordinates before drawing them.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.draw_3d">
+<code class="descclassname">arc.plotter.</code><code class="descname">draw_3d</code><span class="sig-paren">(</span><em>xyz=None</em>, <em>species=None</em>, <em>project_directory=None</em>, <em>save_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#draw_3d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.draw_3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the molecule in a “3D-balls” style
+If xyz is given, it will be used, otherwise the function looks for species.final_xyz
+Input coordinates are in string format
+Saves an image if a species and <cite>project_directory</cite> are provided
+If <cite>save_only</cite> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, then don’t plot, only save the image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.draw_kinetics_plots">
+<code class="descclassname">arc.plotter.</code><code class="descname">draw_kinetics_plots</code><span class="sig-paren">(</span><em>rxn_list</em>, <em>path=None</em>, <em>t_min=(300</em>, <em>u'K')</em>, <em>t_max=(3000</em>, <em>u'K')</em>, <em>t_count=50</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#draw_kinetics_plots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.draw_kinetics_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws plots of calculated rates and RMG’s best values for reaction rates in rxn_list
+<cite>rxn_list</cite> has a .kinetics attribute calculated by ARC and an .rmg_reactions list with RMG rates.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.draw_parity_plot">
+<code class="descclassname">arc.plotter.</code><code class="descname">draw_parity_plot</code><span class="sig-paren">(</span><em>var_arc</em>, <em>var_rmg</em>, <em>var_label</em>, <em>var_units</em>, <em>labels</em>, <em>pp</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#draw_parity_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.draw_parity_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a parity plot.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.draw_structure">
+<code class="descclassname">arc.plotter.</code><code class="descname">draw_structure</code><span class="sig-paren">(</span><em>xyz=None</em>, <em>species=None</em>, <em>project_directory=None</em>, <em>method=u'show_sticks'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#draw_structure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.draw_structure" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for drawing a molecular structure using either show_sticks or draw_3d.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>xyz</strong> (<em>str</em><em>, </em><em>optional</em>) – The xyz coordinates to plot in string format.</li>
+<li><strong>species</strong> (<a class="reference internal" href="species.html#arc.species.species.ARCSpecies" title="arc.species.species.ARCSpecies"><em>ARCSpecies</em></a><em>, </em><em>optional</em>) – A species from which to extract the xyz coordinates to plot.</li>
+<li><strong>project_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – A directory for saving the image (only supported for draw_3d).</li>
+<li><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – The method to use, either show_sticks or draw_3d.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.draw_thermo_parity_plots">
+<code class="descclassname">arc.plotter.</code><code class="descname">draw_thermo_parity_plots</code><span class="sig-paren">(</span><em>species_list</em>, <em>path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#draw_thermo_parity_plots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.draw_thermo_parity_plots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws parity plots of calculated thermo and RMG’s best values for species in species_list.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.get_text_positions">
+<code class="descclassname">arc.plotter.</code><code class="descname">get_text_positions</code><span class="sig-paren">(</span><em>x_data</em>, <em>y_data</em>, <em>txt_width</em>, <em>txt_height</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#get_text_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.get_text_positions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the positions of plot annotations to avoid overlapping.
+Source: <a class="reference external" href="https://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations">stackoverflow</a>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.log_kinetics">
+<code class="descclassname">arc.plotter.</code><code class="descname">log_kinetics</code><span class="sig-paren">(</span><em>label</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#log_kinetics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.log_kinetics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging kinetics from an Arkane output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>str</em>) – The species label.</li>
+<li><strong>path</strong> (<em>str</em>) – The path to the folder containing the relevant Arkane output file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.log_thermo">
+<code class="descclassname">arc.plotter.</code><code class="descname">log_thermo</code><span class="sig-paren">(</span><em>label</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#log_thermo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.log_thermo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logging thermodata from an Arkane output file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>str</em>) – The species label.</li>
+<li><strong>path</strong> (<em>str</em>) – The path to the folder containing the relevant Arkane output file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.plot_3d_mol_as_scatter">
+<code class="descclassname">arc.plotter.</code><code class="descname">plot_3d_mol_as_scatter</code><span class="sig-paren">(</span><em>xyz</em>, <em>path=None</em>, <em>plot_h=True</em>, <em>show_plot=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#plot_3d_mol_as_scatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.plot_3d_mol_as_scatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the molecule as scattered balls in space according to the supplied xyz coordinates
+<cite>xyz</cite> is in string form
+<cite>path</cite> is the species output path to save the image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.plot_rotor_scan">
+<code class="descclassname">arc.plotter.</code><code class="descname">plot_rotor_scan</code><span class="sig-paren">(</span><em>angle</em>, <em>v_list</em>, <em>path=None</em>, <em>pivots=None</em>, <em>comment=u''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#plot_rotor_scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.plot_rotor_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>plots a 1D rotor PES for v_list vs. angle.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.plot_torsion_angles">
+<code class="descclassname">arc.plotter.</code><code class="descname">plot_torsion_angles</code><span class="sig-paren">(</span><em>torsion_angles</em>, <em>torsions_sampling_points=None</em>, <em>wells_dict=None</em>, <em>e_conformers=None</em>, <em>de_threshold=5.0</em>, <em>plot_path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#plot_torsion_angles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.plot_torsion_angles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the torsion angles of the generated conformers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>torsion_angles</strong> (<em>dict</em>) – Keys are torsions, values are lists of corresponding angles.</li>
+<li><strong>torsions_sampling_points</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keys are torsions, values are sampling points.</li>
+<li><strong>wells_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – Keys are torsions, values are lists of wells.
+Each entry in such a list is a well dictionary with the following keys:
+<code class="docutils literal notranslate"><span class="pre">start_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">end_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">start_angle</span></code>, <code class="docutils literal notranslate"><span class="pre">end_angle</span></code>, and <code class="docutils literal notranslate"><span class="pre">angles</span></code>.</li>
+<li><strong>e_conformers</strong> (<em>list</em><em>, </em><em>optional</em>) – Entries are conformers corresponding to the sampling points with FF energies.</li>
+<li><strong>de_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – Energy threshold, plotted as a dashed horizontal line.</li>
+<li><strong>plot_path</strong> (<em>str</em><em>, </em><em>optional</em>) – The path for saving the plot.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.save_conformers_file">
+<code class="descclassname">arc.plotter.</code><code class="descname">save_conformers_file</code><span class="sig-paren">(</span><em>project_directory</em>, <em>label</em>, <em>xyzs</em>, <em>level_of_theory</em>, <em>multiplicity=None</em>, <em>charge=None</em>, <em>is_ts=False</em>, <em>energies=None</em>, <em>ts_methods=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#save_conformers_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.save_conformers_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the conformers before or after optimization.
+If energies are given, the conformers are considered to be optimized.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project_directory</strong> (<em>str</em>) – The path to the project’s directory.</li>
+<li><strong>label</strong> (<em>str</em>) – The species label.</li>
+<li><strong>xyzs</strong> (<em>list</em>) – Entries are sting-format xyz coordinates of conformers.</li>
+<li><strong>level_of_theory</strong> (<em>str</em>) – The level of theory used for the conformers optimization.</li>
+<li><strong>multiplicity</strong> (<em>int</em><em>, </em><em>optional</em>) – The species multiplicity, used for perceiving the molecule.</li>
+<li><strong>charge</strong> (<em>int</em><em>, </em><em>optional</em>) – The species charge, used for perceiving the molecule.</li>
+<li><strong>is_ts</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the species represents a TS. True if it does.</li>
+<li><strong>energies</strong> (<em>list</em><em>, </em><em>optional</em>) – Entries are energies corresponding to the conformer list in kJ/mol.
+If not given (None) then the Species.conformer_energies are used instead.</li>
+<li><strong>ts_methods</strong> (<em>list</em><em>, </em><em>optional</em>) – Entries are method names used to generate the TS guess.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.save_geo">
+<code class="descclassname">arc.plotter.</code><code class="descname">save_geo</code><span class="sig-paren">(</span><em>species</em>, <em>project_directory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#save_geo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.save_geo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the geometry in several forms for an ARC Species object in the project’s output folder under the species name.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.save_kinetics_lib">
+<code class="descclassname">arc.plotter.</code><code class="descname">save_kinetics_lib</code><span class="sig-paren">(</span><em>rxn_list</em>, <em>path</em>, <em>name</em>, <em>lib_long_desc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#save_kinetics_lib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.save_kinetics_lib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save an RMG kinetics library of all reactions in <cite>rxn_list</cite> in the supplied <cite>path</cite>.
+<cite>rxn_list</cite> is a list of ARCReaction objects.
+<cite>name</cite> is the library’s name (or project’s name).
+<cite>long_desc</cite> is a multiline string with level of theory description.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.save_thermo_lib">
+<code class="descclassname">arc.plotter.</code><code class="descname">save_thermo_lib</code><span class="sig-paren">(</span><em>species_list</em>, <em>path</em>, <em>name</em>, <em>lib_long_desc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#save_thermo_lib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.save_thermo_lib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save an RMG thermo library of all species in <cite>species_list</cite> in the supplied <cite>path</cite>.
+<cite>name</cite> is the library’s name (or project’s name).
+<cite>long_desc</cite> is a multiline string with level of theory description.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.save_transport_lib">
+<code class="descclassname">arc.plotter.</code><code class="descname">save_transport_lib</code><span class="sig-paren">(</span><em>species_list</em>, <em>path</em>, <em>name</em>, <em>lib_long_desc=u''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#save_transport_lib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.save_transport_lib" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save an RMG transport library of all species in <cite>species_list</cite> in the supplied <cite>path</cite>.
+<cite>name</cite> is the library’s name (or project’s name).
+<cite>long_desc</cite> is a multiline string with level of theory description.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.show_sticks">
+<code class="descclassname">arc.plotter.</code><code class="descname">show_sticks</code><span class="sig-paren">(</span><em>xyz=None</em>, <em>species=None</em>, <em>project_directory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#show_sticks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.show_sticks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws the molecule in a “sticks” style according to the supplied xyz coordinates.
+Returns whether successful of not. If successful, saves an image using draw_3d.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.plotter.text_plotter">
+<code class="descclassname">arc.plotter.</code><code class="descname">text_plotter</code><span class="sig-paren">(</span><em>x_data</em>, <em>y_data</em>, <em>labels</em>, <em>text_positions</em>, <em>axis</em>, <em>txt_width</em>, <em>txt_height</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/plotter.html#text_plotter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.plotter.text_plotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Annotate a plot and add an arrow.
+Source: <a class="reference external" href="https://stackoverflow.com/questions/8850142/matplotlib-overlapping-annotations">stackoverflow</a>.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="processor.html" class="btn btn-neutral float-right" title="arc.processor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="parser.html" class="btn btn-neutral float-left" title="arc.parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

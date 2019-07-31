@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.reaction &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">ARC’s API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>arc.reaction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for arc.reaction</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A module for representing a reaction.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">rmgpy.species</span> <span class="k">import</span> <span class="n">Species</span>
+<span class="kn">from</span> <span class="nn">rmgpy.reaction</span> <span class="k">import</span> <span class="n">Reaction</span>
+
+<span class="kn">from</span> <span class="nn">arc.common</span> <span class="k">import</span> <span class="n">get_logger</span>
+<span class="kn">import</span> <span class="nn">arc.rmgdb</span> <span class="k">as</span> <span class="nn">rmgdb</span>
+<span class="kn">from</span> <span class="nn">arc.species.species</span> <span class="k">import</span> <span class="n">ARCSpecies</span>
+<span class="kn">from</span> <span class="nn">arc.arc_exceptions</span> <span class="k">import</span> <span class="n">ReactionError</span><span class="p">,</span> <span class="n">InputError</span>
+<span class="kn">from</span> <span class="nn">arc.settings</span> <span class="k">import</span> <span class="n">default_ts_methods</span>
+
+<span class="c1">##################################################################</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="ARCReaction"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction">[docs]</a><span class="k">class</span> <span class="nc">ARCReaction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for representing a chemical reaction.</span>
+
+<span class="sd">    Either give reactants and products (just list of labels corresponding to :ref:`ARCSpecies &lt;species&gt;`),</span>
+<span class="sd">    a reaction label, or an RMG Reaction object.</span>
+<span class="sd">    If the reactants and products in the RMG Reaction aren&#39;t ARCSpecies, they will be created.</span>
+
+<span class="sd">    The ARCReaction object stores the labels corresponding to the reactants, products and TS ARCSpecies objects</span>
+<span class="sd">    as self.reactants, self.products, and self.ts_label, respectively.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        label (str, optional): The reaction&#39;s label in the format `r1 + r2 &lt;=&gt; p1 + p2`</span>
+<span class="sd">                               (or unimolecular on either side, as appropriate).</span>
+<span class="sd">        reactants (list, optional): A list of reactants labels corresponding to an :ref:`ARCSpecies &lt;species&gt;`.</span>
+<span class="sd">        products (list, optional): A list of products labels corresponding to an :ref:`ARCSpecies &lt;species&gt;`.</span>
+<span class="sd">        ts_label (str, optional): The :ref:`ARCSpecies &lt;species&gt;` label of the respective TS.</span>
+<span class="sd">        rmg_reaction (Reaction, optional): An RMG Reaction class.</span>
+<span class="sd">        ts_methods (list, optional): Methods to try for generating TS guesses. If an ARCSpecies is a TS and ts_methods</span>
+<span class="sd">                                     is empty (passing an empty list), then xyz (user guess) must be given.</span>
+<span class="sd">        ts_xyz_guess (list, optional): A list of TS XYZ user guesses, each in a string format.</span>
+<span class="sd">        multiplicity (int, optional): The reaction surface multiplicity. A trivial guess will be made unless provided.</span>
+<span class="sd">        charge (int, optional): The reaction surface charge.</span>
+<span class="sd">        reaction_dict (dict, optional): A dictionary to create this object from (used when restarting ARC).</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        label (str): The reaction&#39;s label in the format `r1 + r2 &lt;=&gt; p1 + p2`</span>
+<span class="sd">                     (or unimolecular on either side, as appropriate).</span>
+<span class="sd">        family (str): The RMG kinetic family, if applicable.</span>
+<span class="sd">        family_own_reverse (bool): Whether the RMG family is its own reverse.</span>
+<span class="sd">        reactants (list): A list of reactants labels corresponding to an :ref:`ARCSpecies &lt;species&gt;`.</span>
+<span class="sd">        products (list): A list of products labels corresponding to an :ref:`ARCSpecies &lt;species&gt;`.</span>
+<span class="sd">        r_species (list): A list of reactants :ref:`ARCSpecies &lt;species&gt;` objects.</span>
+<span class="sd">        p_species (list): A list of products :ref:`ARCSpecies &lt;species&gt;` objects.</span>
+<span class="sd">        ts_species (ARCSpecies): The :ref:`ARCSpecies &lt;species&gt;` corresponding to the reaction&#39;s TS.</span>
+<span class="sd">        dh_rxn298 (float):  The heat of reaction at 298K.</span>
+<span class="sd">        kinetics (Arrhenius): The kinetics calculated by ARC.</span>
+<span class="sd">        rmg_kinetics (Arrhenius): The kinetics generated by RMG, for reality-check.</span>
+<span class="sd">        rmg_reaction (Reaction): An RMG Reaction class.</span>
+<span class="sd">        rmg_reactions (list): A list of RMG Reaction objects with RMG rates for comparisons.</span>
+<span class="sd">        long_kinetic_description (str): A description for the species entry in the thermo library outputted.</span>
+<span class="sd">        ts_methods (list): Methods to try for generating TS guesses. If an ARCSpecies is a TS and ts_methods</span>
+<span class="sd">                           is empty (passing an empty list), then xyz (user guess) must be given.</span>
+<span class="sd">        ts_xyz_guess (list): A list of TS XYZ user guesses, each in a string format.</span>
+<span class="sd">        multiplicity (int): The reaction surface multiplicity. A trivial guess will be made unless provided.</span>
+<span class="sd">        charge (int): The reaction surface charge.</span>
+<span class="sd">        index (int): An auto-generated index associating the ARCReaction object with the</span>
+<span class="sd">                     corresponding TS :ref:`ARCSpecies &lt;species&gt;` object.</span>
+<span class="sd">        ts_label (str): The :ref:`ARCSpecies &lt;species&gt;` label of the respective TS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">reactants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">products</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ts_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rmg_reaction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ts_methods</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ts_xyz_guess</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">reaction_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="o">=</span> <span class="s1">&#39; &lt;=&gt; &#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plus</span> <span class="o">=</span> <span class="s1">&#39; + &#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kinetics</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmg_kinetics</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">long_kinetic_description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">family</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">family_own_reverse</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_label</span> <span class="o">=</span> <span class="n">ts_label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dh_rxn298</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reactions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">reaction_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Reading from a dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">reaction_dict</span><span class="o">=</span><span class="n">reaction_dict</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Not reading from a dictionary</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multiplicity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="n">charge</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Reaction multiplicity must be an integer, got </span><span class="si">{0}</span><span class="s1"> of type </span><span class="si">{1}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="o">=</span> <span class="n">reactants</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="n">products</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="o">=</span> <span class="n">rmg_reaction</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Cannot determine reactants and/or products labels for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_label_reactants_products</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span> <span class="o">=</span> <span class="n">ts_methods</span> <span class="k">if</span> <span class="n">ts_methods</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">default_ts_methods</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span> <span class="o">=</span> <span class="p">[</span><span class="n">tsm</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">tsm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_xyz_guess</span> <span class="o">=</span> <span class="n">ts_xyz_guess</span> <span class="k">if</span> <span class="n">ts_xyz_guess</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;An ARC Reaction can have up to three reactants / products. got </span><span class="si">{0}</span><span class="s1"> reactants&#39;</span>
+                                <span class="s1">&#39; and </span><span class="si">{1}</span><span class="s1"> products for reaction </span><span class="si">{2}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">),</span>
+                                                                             <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+
+<div class="viewcode-block" id="ARCReaction.as_dict"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for dumping this object as a dictionary in a YAML file for restarting ARC&quot;&quot;&quot;</span>
+        <span class="n">reaction_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;multiplicity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">charge</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;reactants&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;r_species&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">]</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;p_species&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_species&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;rmg_reaction&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span><span class="p">:</span>
+            <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;rmg_reaction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction_to_str</span><span class="p">()</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">family</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;family_own_reverse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">family_own_reverse</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;long_kinetic_description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">long_kinetic_description</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_methods&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_xyz_guess&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_xyz_guess</span>
+        <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_label</span>
+        <span class="k">return</span> <span class="n">reaction_dict</span></div>
+
+<div class="viewcode-block" id="ARCReaction.from_dict"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reaction_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A helper function for loading this object from a dictionary in a YAML file for restarting ARC</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;index&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;label&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;multiplicity&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;multiplicity&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;reactants&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;reactants&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;products&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;products&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">family</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;family&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;family&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">family_own_reverse</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;family_own_reverse&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;family_own_reverse&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="s1">&#39;rmg_reaction&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction_from_str</span><span class="p">(</span><span class="n">reaction_string</span><span class="o">=</span><span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;rmg_reaction&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_label_reactants_products</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Cannot determine reactants and/or products labels for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">products</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;All species in a reaction must be labeled (and the labels must correspond&#39;</span>
+                                 <span class="s1">&#39; to respective Species in ARC). If an RMG Reaction object was passes, make&#39;</span>
+                                 <span class="s1">&#39; sure that all species in the reactants and products are correctly labeled.&#39;</span>
+                                 <span class="s1">&#39; Problematic reaction: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="o">=</span> <span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">products</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_label_reactants_products</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_label</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_label&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;ts_label&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">from_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;r_species&#39;</span><span class="p">]]</span> <span class="k">if</span> <span class="s1">&#39;r_species&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">from_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;p_species&#39;</span><span class="p">]]</span> <span class="k">if</span> <span class="s1">&#39;p_species&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_species&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">from_dict</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;ts_species&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">long_kinetic_description</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;long_kinetic_description&#39;</span><span class="p">]</span>\
+            <span class="k">if</span> <span class="s1">&#39;long_kinetic_description&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_methods&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;ts_methods&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="n">default_ts_methods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span> <span class="o">=</span> <span class="p">[</span><span class="n">tsm</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">tsm</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts_xyz_guess</span> <span class="o">=</span> <span class="n">reaction_dict</span><span class="p">[</span><span class="s1">&#39;ts_xyz_guess&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;ts_xyz_guess&#39;</span> <span class="ow">in</span> <span class="n">reaction_dict</span> <span class="k">else</span> <span class="nb">list</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ARCReaction.set_label_reactants_products"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.set_label_reactants_products">[docs]</a>    <span class="k">def</span> <span class="nf">set_label_reactants_products</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for settings the label, reactants, and products attributes for a Reaction&quot;&quot;&quot;</span>
+        <span class="c1"># first make sure that reactants and products labels are defines (most often used)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;A reaction label must contain an arrow (&quot;</span><span class="si">{0}</span><span class="s1">&quot;)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="p">))</span>
+                <span class="n">reactants</span><span class="p">,</span> <span class="n">products</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plus</span> <span class="ow">in</span> <span class="n">reactants</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="o">=</span> <span class="n">reactants</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="o">=</span> <span class="p">[</span><span class="n">reactants</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plus</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="n">products</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">products</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">products</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">),</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">)])</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">),</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">)])</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># this will probably never be executed, but OK to keep</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">),</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">products</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction_from_arc_species</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Either a label or reactants and products lists must be specified&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ARCReaction.rmg_reaction_to_str"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.rmg_reaction_to_str">[docs]</a>    <span class="k">def</span> <span class="nf">rmg_reaction_to_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for dumping the RMG Reaction object as a string for the YAML restart dictionary&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">products</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="ARCReaction.rmg_reaction_from_str"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.rmg_reaction_from_str">[docs]</a>    <span class="k">def</span> <span class="nf">rmg_reaction_from_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reaction_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for regenerating the RMG Reaction object from a string representation&quot;&quot;&quot;</span>
+        <span class="n">reactants</span><span class="p">,</span> <span class="n">products</span> <span class="o">=</span> <span class="n">reaction_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="p">)</span>
+        <span class="n">reactants</span> <span class="o">=</span> <span class="p">[</span><span class="n">Species</span><span class="p">()</span><span class="o">.</span><span class="n">fromSMILES</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">smiles</span><span class="p">))</span> <span class="k">for</span> <span class="n">smiles</span> <span class="ow">in</span> <span class="n">reactants</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">)]</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">Species</span><span class="p">()</span><span class="o">.</span><span class="n">fromSMILES</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">smiles</span><span class="p">))</span> <span class="k">for</span> <span class="n">smiles</span> <span class="ow">in</span> <span class="n">products</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="o">=</span> <span class="n">Reaction</span><span class="p">(</span><span class="n">reactants</span><span class="o">=</span><span class="n">reactants</span><span class="p">,</span> <span class="n">products</span><span class="o">=</span><span class="n">products</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ARCReaction.rmg_reaction_from_arc_species"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.rmg_reaction_from_arc_species">[docs]</a>    <span class="k">def</span> <span class="nf">rmg_reaction_from_arc_species</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A helper function for generating the RMG Reaction object from ARCSpecies</span>
+<span class="sd">        Used for determining the family</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">)</span> <span class="ow">and</span>\
+                <span class="nb">all</span><span class="p">([</span><span class="n">arc_spc</span><span class="o">.</span><span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arc_spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]):</span>
+            <span class="n">reactants</span> <span class="o">=</span> <span class="p">[</span><span class="n">Species</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">mol</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">reac</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">):</span>
+                <span class="n">reactants</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">reac</span><span class="o">.</span><span class="n">label</span>
+            <span class="n">products</span> <span class="o">=</span> <span class="p">[</span><span class="n">Species</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">mol</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">prod</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">):</span>
+                <span class="n">products</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">prod</span><span class="o">.</span><span class="n">label</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="o">=</span> <span class="n">Reaction</span><span class="p">(</span><span class="n">reactants</span><span class="o">=</span><span class="n">reactants</span><span class="p">,</span> <span class="n">products</span><span class="o">=</span><span class="n">products</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ARCReaction.arc_species_from_rmg_reaction"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.arc_species_from_rmg_reaction">[docs]</a>    <span class="k">def</span> <span class="nf">arc_species_from_rmg_reaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A helper function for generating the ARC Species (.r_species and .p_species) from the RMG Reaction object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="o">=</span> <span class="p">[</span><span class="n">ARCSpecies</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="n">spc</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span> <span class="o">=</span> <span class="p">[</span><span class="n">ARCSpecies</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="n">spc</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">products</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ARCReaction.determine_rxn_multiplicity"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.determine_rxn_multiplicity">[docs]</a>    <span class="k">def</span> <span class="nf">determine_rxn_multiplicity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for determining the surface multiplicity&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ordered_multiplicity_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">ordered_multiplicity_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">ordered_multiplicity_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">ordered_multiplicity_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">ordered_multiplicity_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="o">.</span><span class="n">reactants</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">molecule</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># S + S = D</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># S + D = D</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># D + D = S or T</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ASSUMING a multiplicity of 1 (singlet) for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># S + T = T</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># D + T = D or Q</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ASSUMING a multiplicity of 2 (doublet) for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># T + T = S or T or quintet</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ASSUMING a multiplicity of 3 (triplet) for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># S + S + S = S</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># S + S + D = D</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># S + S + T = T</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># S + D + D = S or T</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ASSUMING a multiplicity of 1 (singlet) for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># D + D + D = D or T or Q</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ASSUMING a multiplicity of 2 (doublet) for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ordered_multiplicity_list</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># S + D + T = D or T</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ASSUMING a multiplicity of 2 (doublet) for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Could not determine multiplicity for reaction </span><span class="si">{0}</span><span class="s1">, please input it.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Setting multiplicity of reaction </span><span class="si">{0}</span><span class="s1"> to </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ARCReaction.determine_rxn_charge"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.determine_rxn_charge">[docs]</a>    <span class="k">def</span> <span class="nf">determine_rxn_charge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A helper function for determining the surface charge&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">r</span><span class="o">.</span><span class="n">charge</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="ARCReaction.determine_family"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.determine_family">[docs]</a>    <span class="k">def</span> <span class="nf">determine_family</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmgdatabase</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine the RMG family and saves the (family, own reverse) tuple in the ``family`` attribute&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">family</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">family_own_reverse</span> <span class="o">=</span> <span class="n">rmgdb</span><span class="o">.</span><span class="n">determine_reaction_family</span><span class="p">(</span><span class="n">rmgdb</span><span class="o">=</span><span class="n">rmgdatabase</span><span class="p">,</span>
+                                                                                   <span class="n">reaction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ARCReaction.check_ts"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.check_ts">[docs]</a>    <span class="k">def</span> <span class="nf">check_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check that the TS E0 is above both reactants and products wells</span>
+<span class="sd">        Return ``False`` if this test fails, else ``True``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span> <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="p">]]):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not get E0&#39;s of all species participating in reaction </span><span class="si">{0}</span><span class="s2">. Cannot check TS E0.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+            <span class="n">r_e_elect</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">])</span>\
+                <span class="k">else</span> <span class="nb">sum</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">)</span>
+            <span class="n">p_e_elect</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">])</span>\
+                <span class="k">else</span> <span class="nb">sum</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">)</span>
+            <span class="n">ts_e_elect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="o">.</span><span class="n">e_elect</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Reactants E0: </span><span class="si">{0}</span><span class="se">\n</span><span class="s1">Products E0: </span><span class="si">{1}</span><span class="se">\n</span><span class="s1">TS E0: </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">r_e_elect</span><span class="p">,</span> <span class="n">p_e_elect</span><span class="p">,</span> <span class="n">ts_e_elect</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="n">r_e_elect</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">])</span>
+        <span class="n">p_e_elect</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">spc</span><span class="o">.</span><span class="n">e_elect</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="o">.</span><span class="n">e_elect</span> <span class="o">&lt;</span> <span class="n">r_e_elect</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="o">.</span><span class="n">e_elect</span> <span class="o">&lt;</span> <span class="n">p_e_elect</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;TS of reaction </span><span class="si">{0}</span><span class="s1"> has a lower E0 value than expected:</span><span class="se">\n</span><span class="s1">Reactants: </span><span class="si">{1:.2f}</span><span class="s1"> kJ/mol</span><span class="se">\n</span><span class="s1">TS:&#39;</span>
+                             <span class="s1">&#39; </span><span class="si">{2:.2f}</span><span class="s1"> kJ/mol</span><span class="se">\n</span><span class="s1">Products: </span><span class="si">{3:.2f}</span><span class="s1"> kJ/mol&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">r_e_elect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="o">.</span><span class="n">e_elect</span><span class="p">,</span> <span class="n">p_e_elect</span><span class="p">))</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">log</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Reaction </span><span class="si">{0}</span><span class="s1"> has the following path energies:</span><span class="se">\n</span><span class="s1">Reactants: </span><span class="si">{1:.2f}</span><span class="s1"> kJ/mol&#39;</span>
+                        <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">TS: </span><span class="si">{2:.2f}</span><span class="s1"> kJ/mol</span><span class="se">\n</span><span class="s1">Products: </span><span class="si">{3:.2f}</span><span class="s1"> kJ/mol&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">r_e_elect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_species</span><span class="o">.</span><span class="n">e_elect</span><span class="p">,</span> <span class="n">p_e_elect</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="ARCReaction.check_attributes"><a class="viewcode-back" href="../../api/reaction.html#arc.reaction.ARCReaction.check_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">check_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check that the Reaction object is defined correctly&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_label_reactants_products</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;A reaction seems to not be defined correctly&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrow</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;A reaction label must include a double ended arrow with spaces on both&#39;</span>
+                                <span class="s1">&#39; sides: &quot;</span><span class="si">{0}</span><span class="s1">&quot;. Got:</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;+&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">plus</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Reactants or products in a reaction label must separated with </span><span class="si">{0}</span><span class="s1"> (has spaces on both&#39;</span>
+                                <span class="s1">&#39; sides). Got:</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="n">species_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arrow</span><span class="p">)</span>
+        <span class="n">reactants</span> <span class="o">=</span> <span class="n">species_labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">)</span>
+        <span class="n">products</span> <span class="o">=</span> <span class="n">species_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plus</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="n">reactants</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reactant</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Reactant </span><span class="si">{0}</span><span class="s1"> from the reaction label </span><span class="si">{1}</span><span class="s1"> not in self.reactants (</span><span class="si">{2}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">reactant</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reactant</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reactants</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Reactant </span><span class="si">{0}</span><span class="s1"> not in the reaction label (</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reactant</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">product</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Product </span><span class="si">{0}</span><span class="s1"> from the reaction label </span><span class="si">{1}</span><span class="s1"> not in self.products (</span><span class="si">{2}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">product</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">product</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Product </span><span class="si">{0}</span><span class="s1"> not in the reaction label (</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reactant</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Reactant </span><span class="si">{0}</span><span class="s1"> from not in self.reactants (</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">reactant</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="n">reactants</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reactant</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Reactant </span><span class="si">{0}</span><span class="s1"> from the reaction label </span><span class="si">{1}</span><span class="s1"> not in self.r_species (</span><span class="si">{2}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">reactant</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">reactant</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Reactant </span><span class="si">{0}</span><span class="s1"> not in n self.r_species (</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">reactant</span><span class="p">,</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_species</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">product</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Product </span><span class="si">{0}</span><span class="s1"> from not in self.products (</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">product</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reactants</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">products</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">product</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Product </span><span class="si">{0}</span><span class="s1"> from the reaction label </span><span class="si">{1}</span><span class="s1"> not in self.p_species (</span><span class="si">{2}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">product</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">products</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">product</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="n">ReactionError</span><span class="p">(</span><span class="s1">&#39;Product </span><span class="si">{0}</span><span class="s1"> not in n self.p_species (</span><span class="si">{1}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">product</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_species</span><span class="p">]))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

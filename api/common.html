@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.common &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Standalone tools" href="../tools.html" />
+    <link rel="prev" title="arc.rmgdb" href="rmgdb.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../output.html">Output</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ARC’s API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">arc.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="species.html">arc.species.species</a></li>
+<li class="toctree-l2"><a class="reference internal" href="converter.html">arc.species.converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformers.html">arc.species.conformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reaction.html">arc.reaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.html">arc.scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.html">arc.job.job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">arc.job.ssh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local.html">arc.job.local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">arc.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">arc.plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processor.html">arc.processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmgdb.html">arc.rmgdb</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">arc.common</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">ARC’s API</a> &raquo;</li>
+        
+      <li>arc.common</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/common.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-arc.common">
+<span id="arc-common"></span><span id="common"></span><h1>arc.common<a class="headerlink" href="#module-arc.common" title="Permalink to this headline">¶</a></h1>
+<p>This module contains functions which are shared across multiple ARC modules.
+As such, it should not import any other ARC module (specifically ones that use logging) to avoid circular imports.</p>
+<p>VERSION is the full ARC version, using <a class="reference external" href="https://semver.org/">semantic versioning</a>.</p>
+<p>ATOM_RADII data taken from <a class="reference external" href="http://dx.doi.org/10.1039/b801115j">DOI 10.1039/b801115j</a>.</p>
+<dl class="function">
+<dt id="arc.common.check_ess_settings">
+<code class="descclassname">arc.common.</code><code class="descname">check_ess_settings</code><span class="sig-paren">(</span><em>ess_settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#check_ess_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.check_ess_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function to convert servers in the ess_settings dict to lists
+Assists in troubleshooting job and trying a different server
+Also check ESS and servers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ess_settings</strong> (<em>dict</em><em>, </em><em>optional</em>) – ARC’s ESS settings dictionary.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An updated ARC ESS dictionary.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.determine_symmetry">
+<code class="descclassname">arc.common.</code><code class="descname">determine_symmetry</code><span class="sig-paren">(</span><em>coords</em>, <em>symbols</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#determine_symmetry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.determine_symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine external symmetry and chirality (optical isomers) of the species.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coords</strong> (<em>list</em>) – The 3D coordinates of a molecule in array-format.</li>
+<li><strong>symbols</strong> (<em>list</em>) – Entries are atomic symbols correcponding to coords.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The external symmetry number.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">int</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">1 if no chiral centers are present, 2 if chiral centers are present.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.get_atom_radius">
+<code class="descclassname">arc.common.</code><code class="descname">get_atom_radius</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#get_atom_radius"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.get_atom_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the atom covalent radius in Angstroms, data in the ATOM_RADII dict.
+(Change to QCElemental after transitioning to Py3)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>symbol</strong> (<em>str</em>) – The atomic symbol.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The atomic covalent radius (None if not found).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.get_git_branch">
+<code class="descclassname">arc.common.</code><code class="descname">get_git_branch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#get_git_branch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.get_git_branch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the git branch to be logged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The git branch name.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.get_git_commit">
+<code class="descclassname">arc.common.</code><code class="descname">get_git_commit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#get_git_commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.get_git_commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the recent git commit to be logged.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Returns empty strings if hash and date cannot be determined.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The git HEAD commit hash and the git HEAD commit date, each as a string.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.get_logger">
+<code class="descclassname">arc.common.</code><code class="descname">get_logger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#get_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.get_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ARC logger (avoid having multiple entries of the logger).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.get_ordinal_indicator">
+<code class="descclassname">arc.common.</code><code class="descname">get_ordinal_indicator</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#get_ordinal_indicator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.get_ordinal_indicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ordinal indicator for an integer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>number</strong> (<em>int</em>) – An integer for which the ordinal indicator will be determined.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The integer’s ordinal indicator.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.initialize_log">
+<code class="descclassname">arc.common.</code><code class="descname">initialize_log</code><span class="sig-paren">(</span><em>log_file</em>, <em>project</em>, <em>project_directory=None</em>, <em>verbose=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#initialize_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.initialize_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up a logger for ARC.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>log_file</strong> (<em>str</em>) – The log file name.</li>
+<li><strong>project</strong> (<em>str</em>) – A name for the project.</li>
+<li><strong>project_directory</strong> (<em>str</em><em>, </em><em>optional</em>) – The path to the project directory.</li>
+<li><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Specify the amount of log text seen.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.log_footer">
+<code class="descclassname">arc.common.</code><code class="descname">log_footer</code><span class="sig-paren">(</span><em>execution_time</em>, <em>level=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#log_footer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.log_footer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a footer for the log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>execution_time</strong> (<em>str</em>) – The overall execution time for ARC.</li>
+<li><strong>level</strong> – The desired logging level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.log_header">
+<code class="descclassname">arc.common.</code><code class="descname">log_header</code><span class="sig-paren">(</span><em>project</em>, <em>level=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#log_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.log_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a header containing identifying information about ARC to the log.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> (<em>str</em>) – The ARC project name to be logged in the header.</li>
+<li><strong>level</strong> – The desired logging level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.min_list">
+<code class="descclassname">arc.common.</code><code class="descname">min_list</code><span class="sig-paren">(</span><em>lst</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#min_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.min_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for finding the minimum of a list of integers where some of the entries might be None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.read_yaml_file">
+<code class="descclassname">arc.common.</code><code class="descname">read_yaml_file</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#read_yaml_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.read_yaml_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a YAML file (usually an input / restart file, but also conformers file)
+and return the parameters as python variables.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>str</em>) – The YAML file path to read.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The content read from the file.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict or list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.save_yaml_file">
+<code class="descclassname">arc.common.</code><code class="descname">save_yaml_file</code><span class="sig-paren">(</span><em>path</em>, <em>content</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#save_yaml_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.save_yaml_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a YAML file (usually an input / restart file, but also conformers file)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> (<em>str</em>) – The YAML file path to save.</li>
+<li><strong>content</strong> (<em>str</em>) – The content to save.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.string_representer">
+<code class="descclassname">arc.common.</code><code class="descname">string_representer</code><span class="sig-paren">(</span><em>dumper</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#string_representer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.string_representer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a custom string representer to use block literals for multiline strings.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.time_lapse">
+<code class="descclassname">arc.common.</code><code class="descname">time_lapse</code><span class="sig-paren">(</span><em>t0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#time_lapse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.time_lapse" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function returning the elapsed time since t0.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>t0</strong> (<em>time.pyi</em>) – The initial time the count starts from.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A “D HH:MM:SS” formatted time difference between now and t0.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.common.unicode_representer">
+<code class="descclassname">arc.common.</code><code class="descname">unicode_representer</code><span class="sig-paren">(</span><em>dumper</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/common.html#unicode_representer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.common.unicode_representer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a custom unicode representer to use block literals for multiline strings in unicode.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../tools.html" class="btn btn-neutral float-right" title="Standalone tools" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rmgdb.html" class="btn btn-neutral float-left" title="arc.rmgdb" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

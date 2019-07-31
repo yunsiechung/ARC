@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.species.converter &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">ARC’s API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>arc.species.converter</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for arc.species.converter</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A module for performing various species-related format conversions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">rdkit</span> <span class="k">import</span> <span class="n">Chem</span>
+<span class="kn">from</span> <span class="nn">rdkit.Chem</span> <span class="k">import</span> <span class="n">rdMolTransforms</span> <span class="k">as</span> <span class="n">rdMT</span>
+<span class="kn">import</span> <span class="nn">pybel</span>
+
+<span class="kn">from</span> <span class="nn">rmgpy.species</span> <span class="k">import</span> <span class="n">Species</span>
+<span class="kn">from</span> <span class="nn">rmgpy.molecule.molecule</span> <span class="k">import</span> <span class="n">Atom</span><span class="p">,</span> <span class="n">Bond</span><span class="p">,</span> <span class="n">Molecule</span>
+<span class="kn">from</span> <span class="nn">rmgpy.molecule.element</span> <span class="k">import</span> <span class="n">getElement</span>
+<span class="kn">from</span> <span class="nn">rmgpy.exceptions</span> <span class="k">import</span> <span class="n">AtomTypeError</span>
+<span class="kn">from</span> <span class="nn">arkane.common</span> <span class="k">import</span> <span class="n">symbol_by_number</span><span class="p">,</span> <span class="n">get_element_mass</span>
+
+<span class="kn">from</span> <span class="nn">arc.common</span> <span class="k">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">arc.arc_exceptions</span> <span class="k">import</span> <span class="n">SpeciesError</span><span class="p">,</span> <span class="n">SanitizationError</span><span class="p">,</span> <span class="n">InputError</span>
+<span class="kn">from</span> <span class="nn">arc.species.xyz_to_2d</span> <span class="k">import</span> <span class="n">MolGraph</span>
+
+<span class="c1">##################################################################</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="get_xyz_string"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.get_xyz_string">[docs]</a><span class="k">def</span> <span class="nf">get_xyz_string</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numbers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert list of lists xyz form::</span>
+
+<span class="sd">        [[0.6616514836, 0.4027481525, -0.4847382281],</span>
+<span class="sd">        [-0.6039793084, 0.6637270105, 0.0671637135],</span>
+<span class="sd">        [-1.4226865648, -0.4973210697, -0.2238712255],</span>
+<span class="sd">        [-0.4993010635, 0.6531020442, 1.0853092315],</span>
+<span class="sd">        [-2.2115796924, -0.4529256762, 0.4144516252],</span>
+<span class="sd">        [-1.8113671395, -0.3268900681, -1.1468957003]]</span>
+
+<span class="sd">    into a geometry form read by an ESS::</span>
+
+<span class="sd">        C    0.6616514836    0.4027481525   -0.4847382281</span>
+<span class="sd">        N   -0.6039793084    0.6637270105    0.0671637135</span>
+<span class="sd">        H   -1.4226865648   -0.4973210697   -0.2238712255</span>
+<span class="sd">        H   -0.4993010635    0.6531020442    1.0853092315</span>
+<span class="sd">        H   -2.2115796924   -0.4529256762    0.4144516252</span>
+<span class="sd">        H   -1.8113671395   -0.3268900681   -1.1468957003</span>
+
+<span class="sd">    The atom symbols are derived from either an RMG Molecule object, atom numbers, or explicitly given (`symbol`).</span>
+<span class="sd">    This function isn&#39;t defined as a method of ARCSpecies since it is also used when parsing opt geometry in Scheduler.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coords (list): The array-format coordinates to be converted.</span>
+<span class="sd">        mol (Molecule, optional): An RMG Molecule object.</span>
+<span class="sd">        numbers (list, optional): Entries are atomic numbers (integers) corresponding to `coords`.</span>
+<span class="sd">        symbols (list, optional): Entries are atomic symbols (strings) corresponding to `coords`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: A string representation of the coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cannot convert string format xyz into a string...&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">coords</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">symbols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="n">symbols</span>
+    <span class="k">elif</span> <span class="n">numbers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+            <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">getElement</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">num</span><span class="p">))</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+            <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must have either an RMG:Molecule object input as `mol`, or atomic numbers / symbols.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">coordinate</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coordinate</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{0:14.8f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="get_xyz_matrix"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.get_xyz_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_xyz_matrix</span><span class="p">(</span><span class="n">xyz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a string xyz form::</span>
+
+<span class="sd">        C    0.6616514836    0.4027481525   -0.4847382281</span>
+<span class="sd">        N   -0.6039793084    0.6637270105    0.0671637135</span>
+<span class="sd">        H   -1.4226865648   -0.4973210697   -0.2238712255</span>
+<span class="sd">        H   -0.4993010635    0.6531020442    1.0853092315</span>
+<span class="sd">        H   -2.2115796924   -0.4529256762    0.4144516252</span>
+<span class="sd">        H   -1.8113671395   -0.3268900681   -1.1468957003</span>
+
+<span class="sd">    into a list of lists xyz form::</span>
+
+<span class="sd">        [[0.6616514836, 0.4027481525, -0.4847382281],</span>
+<span class="sd">        [-0.6039793084, 0.6637270105, 0.0671637135],</span>
+<span class="sd">        [-1.4226865648, -0.4973210697, -0.2238712255],</span>
+<span class="sd">        [-0.4993010635, 0.6531020442, 1.0853092315],</span>
+<span class="sd">        [-2.2115796924, -0.4529256762, 0.4144516252],</span>
+<span class="sd">        [-1.8113671395, -0.3268900681, -1.1468957003]]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xyz (str): The xyz coordinates to conver.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Array-style coordinates.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Chemical symbols of the elements in xyz, order preserved.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: X axis values.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Y axis values.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list: Z axis values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Can only convert sting or unicode to list, got: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">))</span>
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">standardize_xyz_string</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">symbols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">xyz</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">line_split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_split</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Expecting each line in an xyz string to have 4 values, e.g.:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                                 <span class="s1">&#39;C    0.1000    0.2000   -0.3000</span><span class="se">\n</span><span class="s1">but got </span><span class="si">{0}</span><span class="s1"> values:</span><span class="se">\n</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                  <span class="nb">len</span><span class="p">(</span><span class="n">line_split</span><span class="p">),</span> <span class="n">line</span><span class="p">))</span>
+            <span class="n">atom</span><span class="p">,</span> <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">xx</span><span class="p">))</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">yy</span><span class="p">))</span>
+            <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">zz</span><span class="p">))</span>
+            <span class="n">symbols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span></div>
+
+
+<div class="viewcode-block" id="xyz_string_to_xyz_file_format"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.xyz_string_to_xyz_file_format">[docs]</a><span class="k">def</span> <span class="nf">xyz_string_to_xyz_file_format</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert the ARC xyz string format into the `XYZ file format &lt;https://en.wikipedia.org/wiki/XYZ_file_format&gt;`_</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xyz (str): Coordinates.</span>
+<span class="sd">        comment (str, optional): A comment to be added to the xyz format representation of the coordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The coordinates in an XYZ file format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">xyz</span> <span class="o">=</span> <span class="n">standardize_xyz_string</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">xyz</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">comment</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">xyz</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="standardize_xyz_string"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.standardize_xyz_string">[docs]</a><span class="k">def</span> <span class="nf">standardize_xyz_string</span><span class="p">(</span><span class="n">xyz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function to correct xyz string format input.</span>
+<span class="sd">    Usually empty lines are added by the user either in the beginning or the end,</span>
+<span class="sd">    here we remove them along with other common issues.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xyz (str): Coordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        xyz (str): Coordinates in standardized format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">lstrip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">xyz</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">c</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">s</span><span class="p">)])</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">xyz</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">6</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)]):</span>
+        <span class="c1"># Convert Gaussian output format, e.g., &quot;      1          8           0        3.132319    0.769111   -0.080869&quot;</span>
+        <span class="n">new_lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">split</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">new_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">symbol_by_number</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">split</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="n">split</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">split</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">split</span><span class="p">[</span><span class="mi">5</span><span class="p">]]))</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">new_lines</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="p">(</span><span class="n">line</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">char</span> <span class="o">!=</span> <span class="s1">&#39; &#39;</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">line</span><span class="p">])))</span></div>
+
+
+<div class="viewcode-block" id="xyz_to_pybel_mol"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.xyz_to_pybel_mol">[docs]</a><span class="k">def</span> <span class="nf">xyz_to_pybel_mol</span><span class="p">(</span><span class="n">xyz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert xyz in string format into an Open Babel molecule object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">SpeciesError</span><span class="p">(</span><span class="s1">&#39;xyz must be a string format, got: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">xyz</span><span class="p">)))</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pybel_mol</span> <span class="o">=</span> <span class="n">pybel</span><span class="o">.</span><span class="n">readstring</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">xyz_string_to_xyz_file_format</span><span class="p">(</span><span class="n">xyz</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">pybel_mol</span></div>
+
+
+<div class="viewcode-block" id="pybel_to_inchi"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.pybel_to_inchi">[docs]</a><span class="k">def</span> <span class="nf">pybel_to_inchi</span><span class="p">(</span><span class="n">pybel_mol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert an Open Babel molecule object to InChI</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">inchi</span> <span class="o">=</span> <span class="n">pybel_mol</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;inchi&#39;</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>  <span class="c1"># Add fixed H layer</span>
+    <span class="k">return</span> <span class="n">inchi</span></div>
+
+
+<div class="viewcode-block" id="rmg_mol_from_inchi"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.rmg_mol_from_inchi">[docs]</a><span class="k">def</span> <span class="nf">rmg_mol_from_inchi</span><span class="p">(</span><span class="n">inchi</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate an RMG Molecule object from InChI</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rmg_mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">()</span><span class="o">.</span><span class="n">fromInChI</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inchi</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">AtomTypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Got the following Error when trying to create an RMG Molecule object from InChI:&#39;</span>
+                       <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">rmg_mol</span></div>
+
+
+<div class="viewcode-block" id="elementize"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.elementize">[docs]</a><span class="k">def</span> <span class="nf">elementize</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert the atomType of an RMG:Atom object into its general parent element atomType (e.g., `S4d` into `S`)</span>
+<span class="sd">    `atom` is an RMG:Atom object</span>
+<span class="sd">    Written by Matt Johnson</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">atom_type</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">atomType</span>
+    <span class="n">atom_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">at</span> <span class="k">for</span> <span class="n">at</span> <span class="ow">in</span> <span class="n">atom_type</span><span class="o">.</span><span class="n">generic</span> <span class="k">if</span> <span class="n">at</span><span class="o">.</span><span class="n">label</span> <span class="o">!=</span> <span class="s1">&#39;R&#39;</span> <span class="ow">and</span> <span class="n">at</span><span class="o">.</span><span class="n">label</span> <span class="o">!=</span> <span class="s1">&#39;R!H&#39;</span> <span class="ow">and</span> <span class="s1">&#39;Val&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">at</span><span class="o">.</span><span class="n">label</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">atom_type</span><span class="p">:</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">atomType</span> <span class="o">=</span> <span class="n">atom_type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="molecules_from_xyz"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.molecules_from_xyz">[docs]</a><span class="k">def</span> <span class="nf">molecules_from_xyz</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creating RMG:Molecule objects from xyz with correct atom labeling</span>
+<span class="sd">    `xyz` is in a string format</span>
+<span class="sd">    returns `s_mol` (with only single bonds) and `b_mol` (with best guesses for bond orders)</span>
+<span class="sd">    This function is based on the MolGraph.perceive_smiles method</span>
+<span class="sd">    Returns None for b_mol is unsuccessful to infer bond orders</span>
+<span class="sd">    If `multiplicity` is given, the returned species multiplicity will be set to it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">SpeciesError</span><span class="p">(</span><span class="s1">&#39;xyz must be a string format, got: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">xyz</span><span class="p">)))</span>
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">standardize_xyz_string</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="n">coords</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_xyz_matrix</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="n">mol_graph</span> <span class="o">=</span> <span class="n">MolGraph</span><span class="p">(</span><span class="n">symbols</span><span class="o">=</span><span class="n">symbols</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
+    <span class="n">inferred_connections</span> <span class="o">=</span> <span class="n">mol_graph</span><span class="o">.</span><span class="n">infer_connections</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">inferred_connections</span><span class="p">:</span>
+        <span class="n">mol_s1</span> <span class="o">=</span> <span class="n">mol_graph</span><span class="o">.</span><span class="n">to_rmg_mol</span><span class="p">()</span>  <span class="c1"># An RMG Molecule with single bonds, atom order corresponds to xyz</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mol_s1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">s_bonds_mol_from_xyz</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mol_s1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Could not create a 2D graph representation from xyz:</span><span class="se">\n</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xyz</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">mol_s1_updated</span> <span class="o">=</span> <span class="n">update_molecule</span><span class="p">(</span><span class="n">mol_s1</span><span class="p">,</span> <span class="n">to_single_bonds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">pybel_mol</span> <span class="o">=</span> <span class="n">xyz_to_pybel_mol</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pybel_mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">inchi</span> <span class="o">=</span> <span class="n">pybel_to_inchi</span><span class="p">(</span><span class="n">pybel_mol</span><span class="p">)</span>
+        <span class="n">mol_bo</span> <span class="o">=</span> <span class="n">rmg_mol_from_inchi</span><span class="p">(</span><span class="n">inchi</span><span class="p">)</span>  <span class="c1"># An RMG Molecule with bond orders, but without preserved atom order</span>
+        <span class="k">if</span> <span class="n">mol_bo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">multiplicity</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">set_multiplicity</span><span class="p">(</span><span class="n">mol_bo</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">,</span> <span class="n">charge</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">SpeciesError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Cannot infer 2D graph connectivity, failed to set species multiplicity with the &#39;</span>
+                                   <span class="s1">&#39;following error:</span><span class="se">\n</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="n">mol_s1_updated</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">mol_bo</span><span class="o">.</span><span class="n">multiplicity</span>
+            <span class="n">order_atoms</span><span class="p">(</span><span class="n">ref_mol</span><span class="o">=</span><span class="n">mol_s1_updated</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="n">mol_bo</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">set_multiplicity</span><span class="p">(</span><span class="n">mol_s1_updated</span><span class="p">,</span> <span class="n">mol_bo</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="n">charge</span><span class="p">,</span> <span class="n">radical_map</span><span class="o">=</span><span class="n">mol_bo</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">SpeciesError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Cannot infer 2D graph connectivity, failed to set species multiplicity with the &#39;</span>
+                               <span class="s1">&#39;following error:</span><span class="se">\n</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">mol_s1_updated</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mol_bo</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">s_mol</span><span class="p">,</span> <span class="n">b_mol</span> <span class="o">=</span> <span class="n">mol_s1_updated</span><span class="p">,</span> <span class="n">mol_bo</span>
+    <span class="k">return</span> <span class="n">s_mol</span><span class="p">,</span> <span class="n">b_mol</span></div>
+
+
+<div class="viewcode-block" id="set_multiplicity"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.set_multiplicity">[docs]</a><span class="k">def</span> <span class="nf">set_multiplicity</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">multiplicity</span><span class="p">,</span> <span class="n">charge</span><span class="p">,</span> <span class="n">radical_map</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the multiplicity of `mol` to `multiplicity` and change radicals as needed</span>
+<span class="sd">    if a `radical_map`, which is an RMG Molecule object with the same atom order, is given,</span>
+<span class="sd">    it&#39;ll be used to set radicals (useful if bond orders aren&#39;t known for a molecule)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">multiplicity</span>
+    <span class="k">if</span> <span class="n">radical_map</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">radical_map</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;radical_map sent to set_multiplicity() has to be a Molecule object. Got </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">type</span><span class="p">(</span><span class="n">radical_map</span><span class="p">)))</span>
+        <span class="n">set_radicals_by_map</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">radical_map</span><span class="p">)</span>
+    <span class="n">radicals</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">getRadicalCount</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">!=</span> <span class="n">radicals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># this is not the trivial &quot;multiplicity = number of radicals + 1&quot; case</span>
+        <span class="c1"># either the number of radicals was not identified correctly from the 3D structure (i.e., should be lone pairs),</span>
+        <span class="c1"># or their spin isn&#39;t determined correctly</span>
+        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">&gt;</span> <span class="n">radicals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># there are sites that should have radicals, but were&#39;nt identified as such.</span>
+            <span class="c1"># try adding radicals according to missing valances</span>
+            <span class="n">add_rads_by_atom_valance</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">&gt;</span> <span class="n">radicals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># still problematic, currently there&#39;s no automated solution to this case, raise an error</span>
+                <span class="k">raise</span> <span class="n">SpeciesError</span><span class="p">(</span><span class="s1">&#39;A multiplicity of </span><span class="si">{0}</span><span class="s1"> was given, but only </span><span class="si">{1}</span><span class="s1"> radicals were identified. &#39;</span>
+                                   <span class="s1">&#39;Cannot infer 2D graph representation for this species.</span><span class="se">\n</span><span class="s1">More info:</span><span class="si">{2}</span><span class="se">\n</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                    <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="n">radicals</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="c1"># This is a singlet atomic C or Si</span>
+            <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lonePairs</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">&lt;</span> <span class="n">radicals</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># make sure all carbene and nitrene sites, if exist, have lone pairs rather than two unpaired electrons</span>
+            <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">atom</span><span class="o">.</span><span class="n">lonePairs</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="c1"># final check: an even number of radicals results in an odd multiplicity, and vice versa</span>
+    <span class="k">if</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">radicals</span><span class="p">,</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">charge</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SpeciesError</span><span class="p">(</span><span class="s1">&#39;Number of radicals (</span><span class="si">{0}</span><span class="s1">) and multiplicity (</span><span class="si">{1}</span><span class="s1">) for </span><span class="si">{2}</span><span class="s1"> do not match.</span><span class="se">\n</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">radicals</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Number of radicals (</span><span class="si">{0}</span><span class="s1">) and multiplicity (</span><span class="si">{1}</span><span class="s1">) for </span><span class="si">{2}</span><span class="s1"> do not match. It might be OK since&#39;</span>
+                           <span class="s1">&#39; this species is charged and charged molecules are currently not perceived well in ARC.&#39;</span>
+                           <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">radicals</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="add_rads_by_atom_valance"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.add_rads_by_atom_valance">[docs]</a><span class="k">def</span> <span class="nf">add_rads_by_atom_valance</span><span class="p">(</span><span class="n">mol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function for assigning radicals if not identified automatically</span>
+<span class="sd">    and missing according to the given multiplicity</span>
+<span class="sd">    We assume here that all partial charges are already set, but this assumption could be wrong</span>
+<span class="sd">    This implementation might also be problematic for aromatic species with undefined bond orders</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">isNonHydrogen</span><span class="p">():</span>
+            <span class="n">atomic_orbitals</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">lonePairs</span> <span class="o">+</span> <span class="n">atom</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">+</span> <span class="n">atom</span><span class="o">.</span><span class="n">getBondOrdersForAtom</span><span class="p">()</span>
+            <span class="n">missing_electrons</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">atomic_orbitals</span>
+            <span class="k">if</span> <span class="n">missing_electrons</span><span class="p">:</span>
+                <span class="n">atom</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">=</span> <span class="n">missing_electrons</span></div>
+
+
+<div class="viewcode-block" id="set_radicals_by_map"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.set_radicals_by_map">[docs]</a><span class="k">def</span> <span class="nf">set_radicals_by_map</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">radical_map</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set radicals in `mol` by `radical_map`, bot are RMG Molecule objects with the same atom order&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">number</span> <span class="o">!=</span> <span class="n">radical_map</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Atom order in mol and radical_map in set_radicals_by_map() do not match. &#39;</span>
+                             <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> is not </span><span class="si">{1}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="n">radical_map</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">symbol</span><span class="p">))</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">radicalElectrons</span> <span class="o">=</span> <span class="n">radical_map</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">radicalElectrons</span></div>
+
+
+<div class="viewcode-block" id="order_atoms_in_mol_list"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.order_atoms_in_mol_list">[docs]</a><span class="k">def</span> <span class="nf">order_atoms_in_mol_list</span><span class="p">(</span><span class="n">ref_mol</span><span class="p">,</span> <span class="n">mol_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Order the atoms in all molecules of mol_list by the atom order in ref_mol&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mol_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">mol</span> <span class="ow">in</span> <span class="n">mol_list</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>  <span class="c1"># TODO: flag as unordered (or solve)</span>
+                <span class="n">order_atoms</span><span class="p">(</span><span class="n">ref_mol</span><span class="p">,</span> <span class="n">mol</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">SanitizationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Could not order atoms in</span><span class="se">\n</span><span class="si">{0}</span><span class="se">\n</span><span class="s1">Got the following error:&#39;</span>
+                               <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="order_atoms"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.order_atoms">[docs]</a><span class="k">def</span> <span class="nf">order_atoms</span><span class="p">(</span><span class="n">ref_mol</span><span class="p">,</span> <span class="n">mol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Order the atoms in `mol` by the atom order in ref_mol</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ref_mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ref_mol_is_iso_copy</span> <span class="o">=</span> <span class="n">ref_mol</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mol_is_iso_copy</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ref_mol_find_iso_copy</span> <span class="o">=</span> <span class="n">ref_mol</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mol_find_iso_copy</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">ref_mol_is_iso_copy</span> <span class="o">=</span> <span class="n">update_molecule</span><span class="p">(</span><span class="n">ref_mol_is_iso_copy</span><span class="p">,</span> <span class="n">to_single_bonds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mol_is_iso_copy</span> <span class="o">=</span> <span class="n">update_molecule</span><span class="p">(</span><span class="n">mol_is_iso_copy</span><span class="p">,</span> <span class="n">to_single_bonds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">ref_mol_find_iso_copy</span> <span class="o">=</span> <span class="n">update_molecule</span><span class="p">(</span><span class="n">ref_mol_find_iso_copy</span><span class="p">,</span> <span class="n">to_single_bonds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mol_find_iso_copy</span> <span class="o">=</span> <span class="n">update_molecule</span><span class="p">(</span><span class="n">mol_find_iso_copy</span><span class="p">,</span> <span class="n">to_single_bonds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mol_is_iso_copy</span><span class="o">.</span><span class="n">isIsomorphic</span><span class="p">(</span><span class="n">ref_mol_is_iso_copy</span><span class="p">,</span> <span class="n">saveOrder</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">mapping</span> <span class="o">=</span> <span class="n">mol_find_iso_copy</span><span class="o">.</span><span class="n">findIsomorphism</span><span class="p">(</span><span class="n">ref_mol_find_iso_copy</span><span class="p">,</span> <span class="n">saveOrder</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">index_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">ref_mol_find_iso_copy</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">val</span><span class="p">):</span> <span class="n">mol_find_iso_copy</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+                <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">index_map</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SanitizationError</span><span class="p">(</span><span class="s1">&#39;Could not map molecules </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">:</span><span class="se">\n\n</span><span class="si">{2}</span><span class="se">\n\n</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">ref_mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">ref_mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SanitizationError</span><span class="p">(</span><span class="s1">&#39;Could not map non isomorphic molecules </span><span class="si">{0}</span><span class="s1">, </span><span class="si">{1}</span><span class="s1">:</span><span class="se">\n\n</span><span class="si">{2}</span><span class="se">\n\n</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">ref_mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">(),</span> <span class="n">ref_mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">(),</span> <span class="n">mol</span><span class="o">.</span><span class="n">toAdjacencyList</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="update_molecule"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.update_molecule">[docs]</a><span class="k">def</span> <span class="nf">update_molecule</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">to_single_bonds</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a copy of the current molecule with updated atomTypes</span>
+<span class="sd">    if to_single_bonds is True, the returned mol contains only single bonds.</span>
+<span class="sd">    This is useful for isomorphism comparison</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">atoms</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">atoms</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">atom_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">atom1</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="n">new_atom</span> <span class="o">=</span> <span class="n">new_mol</span><span class="o">.</span><span class="n">addAtom</span><span class="p">(</span><span class="n">Atom</span><span class="p">(</span><span class="n">atom1</span><span class="o">.</span><span class="n">element</span><span class="p">))</span>
+        <span class="n">atom_mapping</span><span class="p">[</span><span class="n">atom1</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_atom</span>
+    <span class="k">for</span> <span class="n">atom1</span> <span class="ow">in</span> <span class="n">atoms</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">atom2</span> <span class="ow">in</span> <span class="n">atom1</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">bond_order</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">to_single_bonds</span> <span class="k">else</span> <span class="n">atom1</span><span class="o">.</span><span class="n">bonds</span><span class="p">[</span><span class="n">atom2</span><span class="p">]</span><span class="o">.</span><span class="n">getOrderNum</span><span class="p">()</span>
+            <span class="n">bond</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">atom_mapping</span><span class="p">[</span><span class="n">atom1</span><span class="p">],</span> <span class="n">atom_mapping</span><span class="p">[</span><span class="n">atom2</span><span class="p">],</span> <span class="n">bond_order</span><span class="p">)</span>
+            <span class="n">new_mol</span><span class="o">.</span><span class="n">addBond</span><span class="p">(</span><span class="n">bond</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">new_mol</span><span class="o">.</span><span class="n">updateAtomTypes</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">AtomTypeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">new_mol</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">multiplicity</span>
+    <span class="k">return</span> <span class="n">new_mol</span></div>
+
+
+<div class="viewcode-block" id="s_bonds_mol_from_xyz"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.s_bonds_mol_from_xyz">[docs]</a><span class="k">def</span> <span class="nf">s_bonds_mol_from_xyz</span><span class="p">(</span><span class="n">xyz</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a single bonded molecule from xyz using RMG&#39;s connectTheDots()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mol</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">()</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="n">SpeciesError</span><span class="p">(</span><span class="s1">&#39;xyz must be a string format, got: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">xyz</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">xyz</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">Atom</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">])])</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">mol</span><span class="o">.</span><span class="n">addAtom</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+    <span class="n">mol</span><span class="o">.</span><span class="n">connectTheDots</span><span class="p">()</span>  <span class="c1"># only adds single bonds, but we don&#39;t care</span>
+    <span class="k">return</span> <span class="n">mol</span><span class="p">,</span> <span class="n">coordinates</span></div>
+
+
+<div class="viewcode-block" id="to_rdkit_mol"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.to_rdkit_mol">[docs]</a><span class="k">def</span> <span class="nf">to_rdkit_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">remove_h</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_mapping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sanitize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a molecular structure to a RDKit rdmol object. Uses</span>
+<span class="sd">    `RDKit &lt;http://rdkit.org/&gt;`_ to perform the conversion.</span>
+<span class="sd">    Perceives aromaticity.</span>
+<span class="sd">    Adopted from rmgpy/molecule/converter.py</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mol (Molecule): An RMG Molecule object for the conversion.</span>
+<span class="sd">        remove_h (bool, optional): Whether to remove hydrogen atoms from the molecule, True to remove.</span>
+<span class="sd">        return_mapping (bool, optional): Whether to return the atom mapping, True to return.</span>
+<span class="sd">        sanitize (bool, optional): Whether to sanitize the RDKit molecule, True to sanitize.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RDMol: An RDKit molecule object corresponding to the input RMG Molecule object.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: An atom mapping dictionary. Keys are Atom objects of &#39;mol&#39;, values are atom indices in the RDKit Mol.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mol_copy</span> <span class="o">=</span> <span class="n">mol</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mol_copy</span><span class="o">.</span><span class="n">atomIDValid</span><span class="p">():</span>
+        <span class="n">mol_copy</span><span class="o">.</span><span class="n">assignAtomIDs</span><span class="p">()</span>
+    <span class="n">atom_id_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol_copy</span><span class="o">.</span><span class="n">atoms</span><span class="p">):</span>
+        <span class="n">atom_id_map</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+    <span class="c1"># Sort the atoms before converting to ensure output is consistent between different runs</span>
+    <span class="n">mol_copy</span><span class="o">.</span><span class="n">sortAtoms</span><span class="p">()</span>
+    <span class="n">atoms</span> <span class="o">=</span> <span class="n">mol_copy</span><span class="o">.</span><span class="n">vertices</span>
+    <span class="n">rd_atom_indices</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># dictionary of RDKit atom indices</span>
+    <span class="n">rdkitmol</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">rdchem</span><span class="o">.</span><span class="n">EditableMol</span><span class="p">(</span><span class="n">Chem</span><span class="o">.</span><span class="n">rdchem</span><span class="o">.</span><span class="n">Mol</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol_copy</span><span class="o">.</span><span class="n">vertices</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;X&#39;</span><span class="p">:</span>
+            <span class="n">rd_atom</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">rdchem</span><span class="o">.</span><span class="n">Atom</span><span class="p">(</span><span class="s1">&#39;Pt&#39;</span><span class="p">)</span>  <span class="c1"># not sure how to do this with linear scaling when this might not be Pt</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rd_atom</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">rdchem</span><span class="o">.</span><span class="n">Atom</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">isotope</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">rd_atom</span><span class="o">.</span><span class="n">SetIsotope</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">isotope</span><span class="p">)</span>
+        <span class="n">rd_atom</span><span class="o">.</span><span class="n">SetNumRadicalElectrons</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">radicalElectrons</span><span class="p">)</span>
+        <span class="n">rd_atom</span><span class="o">.</span><span class="n">SetFormalCharge</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">charge</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span> <span class="ow">and</span> <span class="n">atom</span><span class="o">.</span><span class="n">lonePairs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">mol_copy</span><span class="o">.</span><span class="n">multiplicity</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rd_atom</span><span class="o">.</span><span class="n">SetNumRadicalElectrons</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">rdkitmol</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">rd_atom</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">remove_h</span> <span class="ow">and</span> <span class="n">atom</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">):</span>
+            <span class="n">rd_atom_indices</span><span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">[</span><span class="n">atom_id_map</span><span class="p">[</span><span class="n">atom</span><span class="o">.</span><span class="n">id</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">index</span>
+
+    <span class="n">rd_bonds</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">rdchem</span><span class="o">.</span><span class="n">BondType</span>
+    <span class="n">orders</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">rd_bonds</span><span class="o">.</span><span class="n">SINGLE</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="n">rd_bonds</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">rd_bonds</span><span class="o">.</span><span class="n">TRIPLE</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="n">rd_bonds</span><span class="o">.</span><span class="n">AROMATIC</span><span class="p">,</span>
+              <span class="s1">&#39;Q&#39;</span><span class="p">:</span> <span class="n">rd_bonds</span><span class="o">.</span><span class="n">QUADRUPLE</span><span class="p">}</span>
+    <span class="c1"># Add the bonds</span>
+    <span class="k">for</span> <span class="n">atom1</span> <span class="ow">in</span> <span class="n">mol_copy</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">bond</span> <span class="ow">in</span> <span class="n">atom1</span><span class="o">.</span><span class="n">edges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">bond</span><span class="o">.</span><span class="n">isHydrogenBond</span><span class="p">():</span>
+                <span class="k">continue</span>
+            <span class="n">index1</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">atom1</span><span class="p">)</span>
+            <span class="n">index2</span> <span class="o">=</span> <span class="n">atoms</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">atom2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">index1</span> <span class="o">&lt;</span> <span class="n">index2</span><span class="p">:</span>
+                <span class="n">order_string</span> <span class="o">=</span> <span class="n">bond</span><span class="o">.</span><span class="n">getOrderStr</span><span class="p">()</span>
+                <span class="n">order</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">order_string</span><span class="p">]</span>
+                <span class="n">rdkitmol</span><span class="o">.</span><span class="n">AddBond</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+
+    <span class="c1"># Make editable mol and rectify the molecule</span>
+    <span class="n">rdkitmol</span> <span class="o">=</span> <span class="n">rdkitmol</span><span class="o">.</span><span class="n">GetMol</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">sanitize</span><span class="p">:</span>
+        <span class="n">Chem</span><span class="o">.</span><span class="n">SanitizeMol</span><span class="p">(</span><span class="n">rdkitmol</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">remove_h</span><span class="p">:</span>
+        <span class="n">rdkitmol</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">RemoveHs</span><span class="p">(</span><span class="n">rdkitmol</span><span class="p">,</span> <span class="n">sanitize</span><span class="o">=</span><span class="n">sanitize</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_mapping</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rdkitmol</span><span class="p">,</span> <span class="n">rd_atom_indices</span>
+    <span class="k">return</span> <span class="n">rdkitmol</span></div>
+
+
+<div class="viewcode-block" id="rdkit_conf_from_mol"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.rdkit_conf_from_mol">[docs]</a><span class="k">def</span> <span class="nf">rdkit_conf_from_mol</span><span class="p">(</span><span class="n">mol</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Generate an RDKit Conformer object from an RMG Molecule object</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mol (Molecule): The RMG Molecule object.</span>
+<span class="sd">        coordinates (list, str): The coordinates (in any format) of the conformer,</span>
+<span class="sd">                                          atoms must be ordered as in the molecule.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Conformer: An RDKit Conformer object.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        RDMol: An RDKit Molecule object.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Atom index map. Keys are atom indices in the RMG Molecule, values are atom indices in the RDKit Molecule.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">coordinates</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">coordinates</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Cannot process empty coordinates, got: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coordinates</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;The coordinates argument seem to be of wrong type. Got a list of strings:</span><span class="se">\n</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">coordinates</span><span class="p">))</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)):</span>
+        <span class="n">coordinates</span> <span class="o">=</span> <span class="n">get_xyz_matrix</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rd_mol</span><span class="p">,</span> <span class="n">rd_indices</span> <span class="o">=</span> <span class="n">to_rdkit_mol</span><span class="p">(</span><span class="n">mol</span><span class="o">=</span><span class="n">mol</span><span class="p">,</span> <span class="n">remove_h</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_mapping</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">Chem</span><span class="o">.</span><span class="n">AllChem</span><span class="o">.</span><span class="n">EmbedMolecule</span><span class="p">(</span><span class="n">rd_mol</span><span class="p">)</span>
+    <span class="n">index_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">xyz_index</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mol</span><span class="o">.</span><span class="n">atoms</span><span class="p">):</span>  <span class="c1"># generate an atom index mapping dictionary</span>
+        <span class="n">index_map</span><span class="p">[</span><span class="n">xyz_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">rd_indices</span><span class="p">[</span><span class="n">atom</span><span class="p">]</span>
+    <span class="n">conf</span> <span class="o">=</span> <span class="n">rd_mol</span><span class="o">.</span><span class="n">GetConformer</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rd_mol</span><span class="o">.</span><span class="n">GetNumAtoms</span><span class="p">()):</span>
+        <span class="n">conf</span><span class="o">.</span><span class="n">SetAtomPosition</span><span class="p">(</span><span class="n">index_map</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># reset atom coordinates</span>
+    <span class="k">return</span> <span class="n">conf</span><span class="p">,</span> <span class="n">rd_mol</span><span class="p">,</span> <span class="n">index_map</span></div>
+
+
+<div class="viewcode-block" id="set_rdkit_dihedrals"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.set_rdkit_dihedrals">[docs]</a><span class="k">def</span> <span class="nf">set_rdkit_dihedrals</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">rd_mol</span><span class="p">,</span> <span class="n">index_map</span><span class="p">,</span> <span class="n">rd_scan</span><span class="p">,</span> <span class="n">deg_increment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deg_abs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A helper function for setting dihedral angles</span>
+<span class="sd">    `conf` is the RDKit conformer with the current xyz information</span>
+<span class="sd">    `rd_mol` is the RDKit molecule</span>
+<span class="sd">    `indx_map` is an atom index mapping dictionary, keys are xyz_index, values are rd_index</span>
+<span class="sd">    `rd_scan` is the torsion scan atom indices corresponding to the RDKit conformer indices</span>
+<span class="sd">    Either `deg_increment` or `deg_abs` must be specified for the dihedral increment</span>
+<span class="sd">    Returns xyz in an array format ordered according to the map,</span>
+<span class="sd">    the elements in the xyz should be identified by the calling function from the context</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">deg_increment</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">deg_abs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SpeciesError</span><span class="p">(</span><span class="s1">&#39;Cannot set dihedral without either a degree increment or an absolute degree&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">deg_increment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">deg0</span> <span class="o">=</span> <span class="n">rdMT</span><span class="o">.</span><span class="n">GetDihedralDeg</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># get original dihedral</span>
+        <span class="n">deg</span> <span class="o">=</span> <span class="n">deg0</span> <span class="o">+</span> <span class="n">deg_increment</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">deg</span> <span class="o">=</span> <span class="n">deg_abs</span>
+    <span class="n">rdMT</span><span class="o">.</span><span class="n">SetDihedralDeg</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">rd_scan</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">deg</span><span class="p">)</span>
+    <span class="n">new_xyz</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rd_mol</span><span class="o">.</span><span class="n">GetNumAtoms</span><span class="p">()):</span>
+        <span class="n">new_xyz</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">conf</span><span class="o">.</span><span class="n">GetAtomPosition</span><span class="p">(</span><span class="n">index_map</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">conf</span><span class="o">.</span><span class="n">GetAtomPosition</span><span class="p">(</span><span class="n">index_map</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                        <span class="n">conf</span><span class="o">.</span><span class="n">GetAtomPosition</span><span class="p">(</span><span class="n">index_map</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">z</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">new_xyz</span></div>
+
+
+<div class="viewcode-block" id="check_isomorphism"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.check_isomorphism">[docs]</a><span class="k">def</span> <span class="nf">check_isomorphism</span><span class="p">(</span><span class="n">mol1</span><span class="p">,</span> <span class="n">mol2</span><span class="p">,</span> <span class="n">filter_structures</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts `mol1` and `mol2` which are RMG:Molecule objects into RMG:Species object</span>
+<span class="sd">    and generate resonance structures. Then check Species isomorphism.</span>
+<span class="sd">    Return True if one of the molecules in the Species derived from `mol1`</span>
+<span class="sd">    is isomorphic to  one of the molecules in the Species derived from `mol2`.</span>
+<span class="sd">    `filter_structures` is being passes to Species.generate_resonance_structures().</span>
+<span class="sd">    make copies of the molecules, since isIsomorphic() changes atom orders</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mol1</span><span class="o">.</span><span class="n">reactive</span><span class="p">,</span> <span class="n">mol2</span><span class="o">.</span><span class="n">reactive</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span>
+    <span class="n">mol1_copy</span> <span class="o">=</span> <span class="n">mol1</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mol2_copy</span> <span class="o">=</span> <span class="n">mol2</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">spc1</span> <span class="o">=</span> <span class="n">Species</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="p">[</span><span class="n">mol1_copy</span><span class="p">])</span>
+    <span class="n">spc1</span><span class="o">.</span><span class="n">generate_resonance_structures</span><span class="p">(</span><span class="n">keep_isomorphic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filter_structures</span><span class="o">=</span><span class="n">filter_structures</span><span class="p">)</span>
+    <span class="n">spc2</span> <span class="o">=</span> <span class="n">Species</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="p">[</span><span class="n">mol2_copy</span><span class="p">])</span>
+    <span class="n">spc2</span><span class="o">.</span><span class="n">generate_resonance_structures</span><span class="p">(</span><span class="n">keep_isomorphic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filter_structures</span><span class="o">=</span><span class="n">filter_structures</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">spc1</span><span class="o">.</span><span class="n">isIsomorphic</span><span class="p">(</span><span class="n">spc2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_center_of_mass"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.get_center_of_mass">[docs]</a><span class="k">def</span> <span class="nf">get_center_of_mass</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the center of mass of xyz coordinates.</span>
+<span class="sd">    Assumes arc.converter.standardize_xyz_string() was already called for xyz.</span>
+<span class="sd">    Note that xyz from ESS output is usually already centered at the center of mass (to some precision).</span>
+<span class="sd">    Either xyz or coords and symbols must be given.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xyz (string, optional): The xyz coordinates in a string format.</span>
+<span class="sd">        coords (list, optional): The xyz coordinates in an array format.</span>
+<span class="sd">        symbols (list, optional): The chemical element symbols corresponding to `coords`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: The center of mass coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">masses</span><span class="p">,</span> <span class="n">coords</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(),</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">xyz</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="n">splits</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="n">masses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_element_mass</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">]))[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">coords</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">3</span><span class="p">])])</span>
+    <span class="k">elif</span> <span class="n">coords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">symbols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">masses</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_element_mass</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">symbol</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">symbols</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Either xyz or coords and symbols must be given&#39;</span><span class="p">)</span>
+    <span class="n">cm_x</span><span class="p">,</span> <span class="n">cm_y</span><span class="p">,</span> <span class="n">cm_z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">coord</span><span class="p">,</span> <span class="n">mass</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">masses</span><span class="p">):</span>
+        <span class="n">cm_x</span> <span class="o">+=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">mass</span>
+        <span class="n">cm_y</span> <span class="o">+=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">mass</span>
+        <span class="n">cm_z</span> <span class="o">+=</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">mass</span>
+    <span class="n">cm_x</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">masses</span><span class="p">)</span>
+    <span class="n">cm_y</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">masses</span><span class="p">)</span>
+    <span class="n">cm_z</span> <span class="o">/=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">masses</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cm_x</span><span class="p">,</span> <span class="n">cm_y</span><span class="p">,</span> <span class="n">cm_z</span></div>
+
+
+<div class="viewcode-block" id="translate_to_center_of_mass"><a class="viewcode-back" href="../../../api/converter.html#arc.species.converter.translate_to_center_of_mass">[docs]</a><span class="k">def</span> <span class="nf">translate_to_center_of_mass</span><span class="p">(</span><span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Translate coordinates to their center of mass.</span>
+<span class="sd">    Must give either xyz or coords along with symbols.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        xyz (str, optional): A molecule&#39;s coordinates in string-format.</span>
+<span class="sd">        coords (list): A molecule&#39;s coordinates in array-format.</span>
+<span class="sd">        symbols (list): The matching elemental symbols for the coordinates.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list or str: The translated coordinates in the input format.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">coords</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_xyz_matrix</span><span class="p">(</span><span class="n">xyz</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">coords</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">symbols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s1">&#39;Could not translate coordinates to center of mass. Got coords = </span><span class="si">{0}</span><span class="s1"> and &#39;</span>
+                         <span class="s1">&#39;symbols = </span><span class="si">{1}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">symbols</span><span class="p">))</span>
+    <span class="n">cm_x</span><span class="p">,</span> <span class="n">cm_y</span><span class="p">,</span> <span class="n">cm_z</span> <span class="o">=</span> <span class="n">get_center_of_mass</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="n">symbols</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">cm_x</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cm_y</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">cm_z</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+    <span class="n">translated_coords</span> <span class="o">=</span> <span class="p">[[</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">]</span> <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">zi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">xyz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_xyz_string</span><span class="p">(</span><span class="n">coords</span><span class="o">=</span><span class="n">translated_coords</span><span class="p">,</span> <span class="n">symbols</span><span class="o">=</span><span class="n">symbols</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">translated_coords</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

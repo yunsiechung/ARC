@@ -1,0 +1,379 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation instructions &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running ARC" href="running.html" />
+    <link rel="prev" title="ARC - Automated Rate Calculator v1.1.0" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#clone-and-setup-path">Clone and setup path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-dependencies">Install dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-rsa-ssh-keys-and-define-servers">Generate RSA SSH keys and define servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#associating-software-with-servers">Associating software with servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cluster-software-definitions">Cluster software definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-arc-aliases-to-your-bashrc-for-convenience">Add ARC aliases to your .bashrc (for convenience)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">ARC’s API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation instructions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation-instructions">
+<span id="installation"></span><h1>Installation instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this headline">¶</a></h1>
+<p>Note: ARC was only tested on Linux (<a class="reference external" href="http://releases.ubuntu.com/18.04/">Ubuntu</a> 18.04.1 LTS) and Mac machines. We don’t expect it to work on Windows.</p>
+<p>ARC can be installed on a server, as well as on your local desktop / laptop, submitting jobs to the server/s.
+The instructions below make this differentiation when relevant (the only difference is that ARC should be aware
+of software installed on the same machine, where the communication isn’t done via SSH).</p>
+<div class="section" id="clone-and-setup-path">
+<span id="path"></span><h2>Clone and setup path<a class="headerlink" href="#clone-and-setup-path" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Download and install the <a class="reference external" href="https://www.anaconda.com/distribution/">Anaconda Python Platform</a> for Python 2.7 if you haven’t already.</p>
+</li>
+<li><p class="first">Get git if you don’t have it already by typing sudo apt-get install git in a terminal.</p>
+</li>
+<li><p class="first">Clone ARC’s repository to by typing the following command in the desired folder (e.g., under <cite>~/home/Code/</cite>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ReactionMechanismGenerator</span><span class="o">/</span><span class="n">ARC</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Add ARC to your local path in .bashrc (make sure to change <cite>~/Path/to/ARC/</cite> accordingly):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export PYTHONPATH=$PYTHONPATH:~/Path/to/ARC/
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="install-dependencies">
+<span id="arce"></span><h2>Install dependencies<a class="headerlink" href="#install-dependencies" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Install the latest DEVELOPER version of RMG (which has Arkane).
+It is recommended to follow RMG’s <a class="reference external" href="http://reactionmechanismgenerator.github.io/RMG-Py/users/rmg/installation/index.html#for-developers-installation-by-source-using-anaconda-environment">Developer installation by source using Anaconda</a> instructions.
+Make sure to add RMG-Py to your PATH and PYTHONPATH variables as explained in RMG’s documentation.</p>
+</li>
+<li><p class="first">Create the Anaconda environment for ARC:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">environment</span><span class="o">.</span><span class="n">yml</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Activate the ARC environment every time before you run ARC:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">activate</span> <span class="n">arc_env</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="generate-rsa-ssh-keys-and-define-servers">
+<h2>Generate RSA SSH keys and define servers<a class="headerlink" href="#generate-rsa-ssh-keys-and-define-servers" title="Permalink to this headline">¶</a></h2>
+<p>The first two directives are only required if you’d like ARC to access remote servers
+(ARC could also run “locally” on a server).</p>
+<ul class="simple">
+<li>Generate RSA SSH keys for your favorite server/s on which relevant electronic structure software
+(ESS, e.g., Gaussian etc.) are installed. <a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2">Instructions for generating RSA keys could be found here</a>.</li>
+<li>Copy the RSA SSH key path/s on your local machine to ARC/arc/settings.py in the servers
+dictionary under keys.</li>
+<li>Update the <cite>servers</cite> dictionary in <a class="reference external" href="https://github.com/ReactionMechanismGenerator/ARC/blob/master/arc/settings.py">ARC/arc/settings.py</a>.<ul>
+<li>A local server must be named with the reserved keyword <code class="docutils literal notranslate"><span class="pre">local</span></code>. <code class="docutils literal notranslate"><span class="pre">cluster_soft</span></code> and username (<code class="docutils literal notranslate"><span class="pre">un</span></code>) are
+mandatory.</li>
+<li>A remote server has no limitations for naming. <code class="docutils literal notranslate"><span class="pre">cluster_soft</span></code>, <code class="docutils literal notranslate"><span class="pre">address</span></code>, username (<code class="docutils literal notranslate"><span class="pre">un</span></code>), and <code class="docutils literal notranslate"><span class="pre">key</span></code>
+(the path to the local RSA SSH key) are mandatory.</li>
+<li>Optional parameters for both local and remote servers are <code class="docutils literal notranslate"><span class="pre">cpus</span></code> and <code class="docutils literal notranslate"><span class="pre">memory</span></code>. The number of CPUs ARC will use
+when spawning ESS jobs defaults to 8 unless otherwise specified under <code class="docutils literal notranslate"><span class="pre">cpus</span></code>.
+Likewise, the default memory is 16 GB. ARC will not use more than 90% of the node memory specified under <code class="docutils literal notranslate"><span class="pre">memory</span></code>.</li>
+</ul>
+</li>
+<li>Update the submit scripts in <a class="reference external" href="https://github.com/ReactionMechanismGenerator/ARC/blob/master/arc/job/submit.py">ARC/arc/job/submit.py</a>
+according to your servers’ definitions.
+* See the given template examples, and follow the structure of nested dictionaries (by server name, then by ESS name).
+* Preserve the variables in curly braces (e.g., <code class="docutils literal notranslate"><span class="pre">{mem_per_cpu}</span></code>), so that ARC is able to auto-complete them.</li>
+</ul>
+</div>
+<div class="section" id="associating-software-with-servers">
+<h2>Associating software with servers<a class="headerlink" href="#associating-software-with-servers" title="Permalink to this headline">¶</a></h2>
+<p>ARC keeps track of software location on servers using a Python dictionary associating the different software (keys)
+with the servers they are installed on (values). The server name must be consistent with the respective definition
+in the <code class="docutils literal notranslate"><span class="pre">servers</span></code> dictionary mentioned above. Typically, you would update the <code class="docutils literal notranslate"><span class="pre">global_ess_settings</span></code> dictionary in
+<a class="reference external" href="https://github.com/ReactionMechanismGenerator/ARC/blob/master/arc/settings.py">ARC/arc/settings.py</a> to reflect
+your software and servers, for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">global_ess_settings</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;server1&#39;</span><span class="p">,</span> <span class="s1">&#39;server2&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;molpro&#39;</span><span class="p">:</span> <span class="s1">&#39;server2&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;qchem&#39;</span><span class="p">:</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that the above example reflects a situation where QChem in installed on the same machine as ARC, while Gaussian
+and Molpro are installed on different servers ARC has access to. You can of course make any combination as you’d like.
+The servers can be listed as a simple string for a single server, or as a list for multiple servers, where relevant.</p>
+<p>These global settings are used by default unless ARC is given an <code class="docutils literal notranslate"><span class="pre">ess_settings</span></code> dictionary through an input file
+or the API, thus allowing more flexibility when running several instances of ARC simultaneously (e.g., if Gaussian is
+installed on two servers, where one has more memory in its nodes, the user can request ARC to use that specific server
+for the more memory-intensive jobs). More about the <code class="docutils literal notranslate"><span class="pre">ess_settings</span></code> dictionary can be found in the
+<a class="reference internal" href="advanced.html#advanced"><span class="std std-ref">Advanced Features</span></a> section of the documentation.</p>
+<p>If neither <code class="docutils literal notranslate"><span class="pre">global_ess_settings</span></code> (in settings.py) nor <code class="docutils literal notranslate"><span class="pre">ess_settings</span></code> (via an input file or the API) are specified,
+ARC will use its “radar” feature to “scans” the servers it has access to, and assign relevant ESS it is familiar with
+to the respective server. In order for this feature to function properly, make sure your .bashrc file on the remote
+servers does not have an interactive shell check. If it does, disable it.</p>
+<p>It is recommended, though, to use the <code class="docutils literal notranslate"><span class="pre">global_ess_settings</span></code> and/or <code class="docutils literal notranslate"><span class="pre">ess_settings</span></code> dictionaries rather than allowing
+the “radar” to do its thing blindly. The “radar” feature, however, is very useful for diagnostics
+(see <a class="reference internal" href="#tests">Tests</a> below).</p>
+<p>You can check what the “radar” detects using the ARC ESS diagnostics notebook.</p>
+</div>
+<div class="section" id="cluster-software-definitions">
+<h2>Cluster software definitions<a class="headerlink" href="#cluster-software-definitions" title="Permalink to this headline">¶</a></h2>
+<p>ARC supports Slurm and Oracle/Sun Grid Engine (OGE / SGE). If you’re using other <a class="reference external" href="https://en.wikipedia.org/wiki/Comparison_of_cluster_software">cluster software</a>, or if your
+server’s definitions are different that ARC’s, you should also modify the following variables in
+<a class="reference external" href="https://github.com/ReactionMechanismGenerator/ARC/blob/master/arc/settings.py">ARC/arc/settings.py</a>:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">check_status_command</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">submit_command</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">delete_command</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">list_available_nodes_command</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">submit_filename</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">t_max_format</span></code></li>
+</ul>
+<p>You will find the values for <code class="docutils literal notranslate"><span class="pre">check_status_command</span></code>, <code class="docutils literal notranslate"><span class="pre">submit_command</span></code>, <code class="docutils literal notranslate"><span class="pre">delete_command</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">list_available_nodes_command</span></code> by typing on the respective server the <cite>which</cite> command, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">which</span> <span class="n">sbatch</span>
+</pre></div>
+</div>
+<p>If you have different servers with the same cluster software that have different cluster software definitions, just name
+them differently, e.g., <cite>Slurm1</cite> and <cite>Slurm2</cite>, and make sure to pair them accordingly under the <code class="docutils literal notranslate"><span class="pre">servers</span></code> dictionary.</p>
+</div>
+<div class="section" id="tests">
+<span id="id5"></span><h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">If you’d like to make sure ARC has access to your servers and recognises your ESS, use the “radar” tool, available
+as an iPython notebook (see <a class="reference internal" href="tools.html#tools"><span class="std std-ref">Standalone tools</span></a>).</p>
+</li>
+<li><p class="first">Run the minimal example (see <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Examples</span></a>), and a couple more examples, if you’d like, using both input files
+and the API (via iPython notebooks or any other method).</p>
+</li>
+<li><p class="first">Run ARC’s unit tests. Note that for all tests to pass, ARC expects to find the unmodified settings in settings.py.
+Therefore it is recommended to first stash your changes. If you’d like to test ARC with changes you made to the code,
+first commit these changes to a git branch.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">stash</span>
+<span class="n">make</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>After the tests complete, don’t forget to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">stash</span> <span class="n">pop</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="add-arc-aliases-to-your-bashrc-for-convenience">
+<span id="aliases"></span><h2>Add ARC aliases to your .bashrc (for convenience)<a class="headerlink" href="#add-arc-aliases-to-your-bashrc-for-convenience" title="Permalink to this headline">¶</a></h2>
+<p>Below are optional aliases to make ARC (even) more convenient (make sure to change <cite>~/Path/to/ARC/</cite> accordingly):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export arc_path=$HOME&#39;~/Path/to/ARC/&#39;
+alias arce=&#39;source activate arc_env&#39;
+alias arc=&#39;source activate arc_env &amp;&amp; python $arc_path/ARC.py input.yml&#39;
+alias arcrestart=&#39;source activate arc_env &amp;&amp; python $arc_path/ARC.py restart.yml&#39;
+alias arcode=&#39;cd $arc_path&#39;
+alias j=&#39;cd $arc_path/ipython/ &amp;&amp; arce &amp;&amp; jupyter notebook&#39;
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="running.html" class="btn btn-neutral float-right" title="Running ARC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="ARC - Automated Rate Calculator v1.1.0" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,620 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.processor &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">ARC’s API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>arc.processor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for arc.processor</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># encoding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Processor module for outputting thermoproperties and rates.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">unicode_literals</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+
+<span class="kn">from</span> <span class="nn">arkane.input</span> <span class="k">import</span> <span class="n">species</span> <span class="k">as</span> <span class="n">arkane_input_species</span><span class="p">,</span> <span class="n">transitionState</span> <span class="k">as</span> <span class="n">arkane_transition_state</span><span class="p">,</span>\
+    <span class="n">reaction</span> <span class="k">as</span> <span class="n">arkane_reaction</span><span class="p">,</span> <span class="n">process_model_chemistry</span>
+<span class="kn">from</span> <span class="nn">arkane.statmech</span> <span class="k">import</span> <span class="n">StatMechJob</span><span class="p">,</span> <span class="n">assign_frequency_scale_factor</span>
+<span class="kn">from</span> <span class="nn">arkane.thermo</span> <span class="k">import</span> <span class="n">ThermoJob</span>
+<span class="kn">from</span> <span class="nn">arkane.kinetics</span> <span class="k">import</span> <span class="n">KineticsJob</span>
+
+<span class="kn">from</span> <span class="nn">rmgpy.species</span> <span class="k">import</span> <span class="n">Species</span>
+
+<span class="kn">from</span> <span class="nn">arc.common</span> <span class="k">import</span> <span class="n">get_logger</span>
+<span class="kn">import</span> <span class="nn">arc.rmgdb</span> <span class="k">as</span> <span class="nn">rmgdb</span>
+<span class="kn">from</span> <span class="nn">arc.job.inputs</span> <span class="k">import</span> <span class="n">input_files</span>
+<span class="kn">from</span> <span class="nn">arc</span> <span class="k">import</span> <span class="n">plotter</span>
+<span class="kn">from</span> <span class="nn">arc.arc_exceptions</span> <span class="k">import</span> <span class="n">SchedulerError</span><span class="p">,</span> <span class="n">RotorError</span>
+<span class="kn">from</span> <span class="nn">arc.species.species</span> <span class="k">import</span> <span class="n">determine_rotor_symmetry</span><span class="p">,</span> <span class="n">determine_rotor_type</span>
+
+<span class="c1">##################################################################</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Processor"><a class="viewcode-back" href="../../api/processor.html#arc.processor.Processor">[docs]</a><span class="k">class</span> <span class="nc">Processor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ARC Processor class. Post processes results in Arkane.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        project (str): The project&#39;s name. Used for naming the directory.</span>
+<span class="sd">        project_directory (str): The path of the ARC project directory.</span>
+<span class="sd">        species_dict (dict): Keys are labels, values are ARCSpecies objects.</span>
+<span class="sd">        rxn_list (list): List of ARCReaction objects.</span>
+<span class="sd">        output (dict): Keys are labels, values are output file paths.</span>
+<span class="sd">        use_bac (bool): Whether or not to use bond additivity corrections for thermo calculations.</span>
+<span class="sd">        model_chemistry (str): The level of theory used in the sp//freq form (or a composite method).</span>
+<span class="sd">        lib_long_desc (str): A multiline description of levels of theory for the outputted RMG libraries.</span>
+<span class="sd">        rmgdatabase (RMGDatabase, optional): The RMG database object.</span>
+<span class="sd">        t_min (tuple, optional): The minimum temperature for kinetics computations, e.g., (500, str(&#39;K&#39;)).</span>
+<span class="sd">        t_max (tuple, optional): The maximum temperature for kinetics computations, e.g., (3000, str(&#39;K&#39;)).</span>
+<span class="sd">        t_count (int, optional): The number of temperature points between t_min and t_max for kinetics computations.</span>
+<span class="sd">        freq_scale_factor (float, optional): The harmonic frequencies scaling factor. Could be automatically determined</span>
+<span class="sd">                                             if not available in Arkane and not provided by the user.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        project (str): The project&#39;s name. Used for naming the directory.</span>
+<span class="sd">        project_directory (str): The path of the ARC project directory.</span>
+<span class="sd">        species_dict (dict): Keys are labels, values are ARCSpecies objects.</span>
+<span class="sd">        rxn_list (list): List of ARCReaction objects.</span>
+<span class="sd">        output (dict): Keys are labels, values are output file paths.</span>
+<span class="sd">        use_bac (bool): Whether or not to use bond additivity corrections for thermo calculations.</span>
+<span class="sd">        sp_level (str): The single point level of theory, used for atom and bond corrections in Arkane.</span>
+<span class="sd">        freq_level (str): The frequency level of theory, used for the frequency scaling factor in Arkane</span>
+<span class="sd">                          if `freq_scale_factor` is not given.</span>
+<span class="sd">        freq_scale_factor (float): The harmonic frequencies scaling factor. Could be automatically determined</span>
+<span class="sd">                                   if not available in Arkane and not provided by the user.</span>
+<span class="sd">        lib_long_desc (str): A multiline description of levels of theory for the outputted RMG libraries.</span>
+<span class="sd">        t_min (tuple): The minimum temperature for kinetics computations, e.g., (500, str(&#39;K&#39;)).</span>
+<span class="sd">        t_max (tuple): The maximum temperature for kinetics computations, e.g., (3000, str(&#39;K&#39;)).</span>
+<span class="sd">        t_count (int): The number of temperature points between t_min and t_max for kinetics computations.</span>
+<span class="sd">        rmgdb (RMGDatabase): The RMG database object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">project_directory</span><span class="p">,</span> <span class="n">species_dict</span><span class="p">,</span> <span class="n">rxn_list</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">use_bac</span><span class="p">,</span> <span class="n">model_chemistry</span><span class="p">,</span>
+                 <span class="n">lib_long_desc</span><span class="p">,</span> <span class="n">rmgdatabase</span><span class="p">,</span> <span class="n">t_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t_count</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">freq_scale_factor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmgdb</span> <span class="o">=</span> <span class="n">rmgdatabase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_directory</span> <span class="o">=</span> <span class="n">project_directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species_dict</span> <span class="o">=</span> <span class="n">species_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rxn_list</span> <span class="o">=</span> <span class="n">rxn_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_bac</span> <span class="o">=</span> <span class="n">use_bac</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sp_level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_level</span> <span class="o">=</span> <span class="n">process_model_chemistry</span><span class="p">(</span><span class="n">model_chemistry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_scale_factor</span> <span class="o">=</span> <span class="n">freq_scale_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lib_long_desc</span> <span class="o">=</span> <span class="n">lib_long_desc</span>
+        <span class="n">load_thermo_libs</span><span class="p">,</span> <span class="n">load_kinetic_libs</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">species</span><span class="o">.</span><span class="n">is_ts</span> <span class="ow">and</span> <span class="n">species</span><span class="o">.</span><span class="n">final_xyz</span> <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>\
+                <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;ALL converged&#39;</span> <span class="ow">in</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+            <span class="n">load_kinetic_libs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">species</span><span class="o">.</span><span class="n">generate_thermo</span> <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>\
+                <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;ALL converged&#39;</span> <span class="ow">in</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+            <span class="n">load_thermo_libs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;ALL converged&#39;</span> <span class="ow">in</span> <span class="n">spc_output_dict</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">spc_output_dict</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+            <span class="n">rmgdb</span><span class="o">.</span><span class="n">load_rmg_database</span><span class="p">(</span><span class="n">rmgdb</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rmgdb</span><span class="p">,</span> <span class="n">load_thermo_libs</span><span class="o">=</span><span class="n">load_thermo_libs</span><span class="p">,</span>
+                                    <span class="n">load_kinetic_libs</span><span class="o">=</span><span class="n">load_kinetic_libs</span><span class="p">)</span>
+        <span class="n">t_min</span> <span class="o">=</span> <span class="n">t_min</span> <span class="k">if</span> <span class="n">t_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">)</span>
+        <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_max</span> <span class="k">if</span> <span class="n">t_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">t_min</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t_max</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">t_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_max</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_min</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_min</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">t_min</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_max</span> <span class="o">=</span> <span class="p">(</span><span class="n">t_max</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">(</span><span class="n">t_max</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_count</span> <span class="o">=</span> <span class="n">t_count</span> <span class="k">if</span> <span class="n">t_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">50</span>
+
+    <span class="k">def</span> <span class="nf">_generate_arkane_species_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A helper function for generating the Arkane species file.</span>
+<span class="sd">        Assigns the input file path to species.arkane_file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            species (ARCSpecies): The species to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The Arkane output path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">folder_name</span> <span class="o">=</span> <span class="s1">&#39;rxns&#39;</span> <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">is_ts</span> <span class="k">else</span> <span class="s1">&#39;Species&#39;</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="s1">&#39;arkane&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">yml_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">yml_path</span>
+            <span class="k">return</span> <span class="n">output_path</span>
+
+        <span class="n">species</span><span class="o">.</span><span class="n">determine_symmetry</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sp_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;composite&#39;</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sp_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;sp&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SchedulerError</span><span class="p">(</span><span class="s1">&#39;Could not find path to sp calculation for species </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">number_of_atoms</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">freq_path</span> <span class="o">=</span> <span class="n">sp_path</span>
+            <span class="n">opt_path</span> <span class="o">=</span> <span class="n">sp_path</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">freq_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;freq&#39;</span><span class="p">]</span>
+            <span class="n">opt_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;freq&#39;</span><span class="p">]</span>
+        <span class="n">rotors</span><span class="p">,</span> <span class="n">rotors_description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">i_r_dict</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i_r_dict</span> <span class="ow">in</span> <span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+            <span class="n">rotors</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">rotors = [&#39;</span>
+            <span class="n">rotors_description</span> <span class="o">=</span> <span class="s1">&#39;1D rotors:</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">number_of_rotors</span><span class="p">):</span>
+                <span class="n">pivots</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;pivots&#39;</span><span class="p">])</span>
+                <span class="n">scan</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;scan&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;success&#39;</span><span class="p">]:</span>
+                    <span class="n">rotor_path</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;scan_path&#39;</span><span class="p">]</span>
+                    <span class="n">rotor_type</span> <span class="o">=</span> <span class="n">determine_rotor_type</span><span class="p">(</span><span class="n">rotor_path</span><span class="p">)</span>
+                    <span class="n">top</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;top&#39;</span><span class="p">])</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">rotor_symmetry</span><span class="p">,</span> <span class="n">max_e</span> <span class="o">=</span> <span class="n">determine_rotor_symmetry</span><span class="p">(</span><span class="n">rotor_path</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">pivots</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">RotorError</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Could not determine rotor symmetry for species </span><span class="si">{0}</span><span class="s1"> between pivots </span><span class="si">{1}</span><span class="s1">.&#39;</span>
+                                     <span class="s1">&#39; Setting the rotor symmetry to 1, which is probably WRONG.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                      <span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">pivots</span><span class="p">))</span>
+                        <span class="n">rotor_symmetry</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">max_e</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">max_e</span> <span class="o">=</span> <span class="s1">&#39;, max scan energy: </span><span class="si">{0:.2f}</span><span class="s1"> kJ/mol&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_e</span><span class="p">)</span> <span class="k">if</span> <span class="n">max_e</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">free</span> <span class="o">=</span> <span class="s1">&#39; (set as a FreeRotor)&#39;</span> <span class="k">if</span> <span class="n">rotor_type</span> <span class="o">==</span> <span class="s1">&#39;FreeRotor&#39;</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">rotors_description</span> <span class="o">+=</span> <span class="s1">&#39;pivots: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pivots</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, dihedral: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span> <span class="o">+</span>\
+                        <span class="s1">&#39;, rotor symmetry: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rotor_symmetry</span><span class="p">)</span> <span class="o">+</span> <span class="n">max_e</span> <span class="o">+</span> <span class="n">free</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="k">if</span> <span class="n">rotor_type</span> <span class="o">==</span> <span class="s1">&#39;HinderedRotor&#39;</span><span class="p">:</span>
+                        <span class="n">rotors</span> <span class="o">+=</span> <span class="n">input_files</span><span class="p">[</span><span class="s1">&#39;arkane_hindered_rotor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rotor_path</span><span class="o">=</span><span class="n">rotor_path</span><span class="p">,</span> <span class="n">pivots</span><span class="o">=</span><span class="n">pivots</span><span class="p">,</span>
+                                                                              <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="n">rotor_symmetry</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">rotor_type</span> <span class="o">==</span> <span class="s1">&#39;FreeRotor&#39;</span><span class="p">:</span>
+                        <span class="n">rotors</span> <span class="o">+=</span> <span class="n">input_files</span><span class="p">[</span><span class="s1">&#39;arkane_free_rotor&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rotor_path</span><span class="o">=</span><span class="n">rotor_path</span><span class="p">,</span> <span class="n">pivots</span><span class="o">=</span><span class="n">pivots</span><span class="p">,</span>
+                                                                          <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="n">rotor_symmetry</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">species</span><span class="o">.</span><span class="n">number_of_rotors</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">rotors</span> <span class="o">+=</span> <span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">          &#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rotors_description</span> <span class="o">+=</span> <span class="s1">&#39;* Invalidated! pivots: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pivots</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;, dihedral: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span> <span class="o">+</span>\
+                                          <span class="s1">&#39;, invalidation reason: &#39;</span> <span class="o">+</span> <span class="n">species</span><span class="o">.</span><span class="n">rotors_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;invalidation_reason&#39;</span><span class="p">]</span> <span class="o">+</span>\
+                                          <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+            <span class="n">rotors</span> <span class="o">+=</span> <span class="s1">&#39;]&#39;</span>
+            <span class="n">species</span><span class="o">.</span><span class="n">long_thermo_description</span> <span class="o">+=</span> <span class="n">rotors_description</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="c1"># write the Arkane species input file</span>
+        <span class="n">input_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                                       <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">_arkane_input.py&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="n">input_file</span> <span class="o">=</span> <span class="n">input_files</span><span class="p">[</span><span class="s1">&#39;arkane_input_species&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_bac</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">species</span><span class="o">.</span><span class="n">is_ts</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Using the following BAC for </span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">bond_corrections</span><span class="p">))</span>
+            <span class="n">bonds</span> <span class="o">=</span> <span class="s1">&#39;bonds = </span><span class="si">{0}</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">bond_corrections</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;NOT using BAC for </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+            <span class="n">bonds</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">input_file</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bonds</span><span class="o">=</span><span class="n">bonds</span><span class="p">,</span> <span class="n">symmetry</span><span class="o">=</span><span class="n">species</span><span class="o">.</span><span class="n">external_symmetry</span><span class="p">,</span>
+                                       <span class="n">multiplicity</span><span class="o">=</span><span class="n">species</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="n">optical</span><span class="o">=</span><span class="n">species</span><span class="o">.</span><span class="n">optical_isomers</span><span class="p">,</span>
+                                       <span class="n">sp_level</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sp_level</span><span class="p">,</span> <span class="n">sp_path</span><span class="o">=</span><span class="n">sp_path</span><span class="p">,</span> <span class="n">opt_path</span><span class="o">=</span><span class="n">opt_path</span><span class="p">,</span>
+                                       <span class="n">freq_path</span><span class="o">=</span><span class="n">freq_path</span><span class="p">,</span> <span class="n">rotors</span><span class="o">=</span><span class="n">rotors</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span> <span class="o">=</span> <span class="n">input_file_path</span>
+        <span class="k">return</span> <span class="n">output_path</span>
+
+<div class="viewcode-block" id="Processor.process"><a class="viewcode-back" href="../../api/processor.html#arc.processor.Processor.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Process ARC outputs and generate thermo and kinetics.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Thermo:</span>
+        <span class="n">species_list_for_thermo_parity</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">species_for_thermo_lib</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">species_for_transport_lib</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">unconverged_species</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">species</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">species</span><span class="o">.</span><span class="n">is_ts</span> <span class="ow">and</span> <span class="s1">&#39;ALL converged&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]:</span>
+                <span class="n">output_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_arkane_species_file</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+                <span class="n">unique_arkane_species_label</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">while</span> <span class="ow">not</span> <span class="n">unique_arkane_species_label</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">arkane_spc</span> <span class="o">=</span> <span class="n">arkane_input_species</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">),</span> <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                        <span class="n">species</span><span class="o">.</span><span class="n">label</span> <span class="o">+=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">999</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">unique_arkane_species_label</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">species</span><span class="o">.</span><span class="n">rmg_species</span> <span class="o">=</span> <span class="n">Species</span><span class="p">(</span><span class="n">molecule</span><span class="o">=</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">mol</span><span class="p">])</span>
+                <span class="n">species</span><span class="o">.</span><span class="n">rmg_species</span><span class="o">.</span><span class="n">reactive</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">mol_list</span><span class="p">:</span>
+                    <span class="n">arkane_spc</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">mol_list</span>
+                    <span class="n">species</span><span class="o">.</span><span class="n">rmg_species</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">species</span><span class="o">.</span><span class="n">mol_list</span>  <span class="c1"># add resonance structures for thermo determination</span>
+                <span class="n">statmech_success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_statmech</span><span class="p">(</span><span class="n">arkane_spc</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span>
+                                                      <span class="n">use_bac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_bac</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">statmech_success</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">generate_thermo</span><span class="p">:</span>
+                    <span class="n">thermo_job</span> <span class="o">=</span> <span class="n">ThermoJob</span><span class="p">(</span><span class="n">arkane_spc</span><span class="p">,</span> <span class="s1">&#39;NASA&#39;</span><span class="p">)</span>
+                    <span class="n">thermo_job</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">output_directory</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">species</span><span class="o">.</span><span class="n">thermo</span> <span class="o">=</span> <span class="n">arkane_spc</span><span class="o">.</span><span class="n">getThermoData</span><span class="p">()</span>
+                    <span class="n">plotter</span><span class="o">.</span><span class="n">log_thermo</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">output_path</span><span class="p">)</span>
+                    <span class="n">species_for_thermo_lib</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_bac</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_level</span><span class="p">:</span>
+                    <span class="c1"># If BAC was used, save another Arkane YAML file of this species with no BAC, so it can be used</span>
+                    <span class="c1"># for further rate calculations if needed (where the conformer.E0 has no BAC)</span>
+                    <span class="n">statmech_success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_statmech</span><span class="p">(</span><span class="n">arkane_spc</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span>
+                                                          <span class="n">use_bac</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="c1"># if statmech_success:</span>
+                    <span class="c1">#     arkane_spc.label += str(&#39;_no_BAC&#39;)</span>
+                    <span class="c1">#     arkane_spc.thermo = None  # otherwise thermo won&#39;t be calculated, although we don&#39;t really care</span>
+                    <span class="c1">#     thermo_job = ThermoJob(arkane_spc, &#39;NASA&#39;)</span>
+                    <span class="c1">#     thermo_job.execute(output_directory=output_path, plot=False)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">species</span><span class="o">.</span><span class="n">rmg_thermo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmgdb</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">getThermoData</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">rmg_species</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Could not retrieve RMG thermo for species </span><span class="si">{0}</span><span class="s1">, possibly due to missing 2D structure &#39;</span>
+                                <span class="s1">&#39;(bond orders). Not including this species in the parity plots.&#39;</span>
+                                <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Got: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">generate_thermo</span><span class="p">:</span>
+                        <span class="n">species_list_for_thermo_parity</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;onedmin converged&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="n">species_for_transport_lib</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;ALL converged&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]:</span>
+                <span class="n">unconverged_species</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+        <span class="c1"># Kinetics:</span>
+        <span class="n">rxn_list_for_kinetics_plots</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">arkane_spc_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># a dictionary with all species and the TSs</span>
+        <span class="k">for</span> <span class="n">rxn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rxn_list</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">species</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_dict</span><span class="p">[</span><span class="n">rxn</span><span class="o">.</span><span class="n">ts_label</span><span class="p">]</span>  <span class="c1"># The TS</span>
+            <span class="k">if</span> <span class="s1">&#39;ALL converged&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">rxn</span><span class="o">.</span><span class="n">check_ts</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">copy_freq_output_for_ts</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">rxn_list_for_kinetics_plots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rxn</span><span class="p">)</span>
+                <span class="n">output_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_arkane_species_file</span><span class="p">(</span><span class="n">species</span><span class="p">)</span>
+                <span class="n">arkane_ts</span> <span class="o">=</span> <span class="n">arkane_transition_state</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">),</span> <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">)</span>
+                <span class="n">arkane_spc_dict</span><span class="p">[</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">arkane_ts</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_run_statmech</span><span class="p">(</span><span class="n">arkane_ts</span><span class="p">,</span> <span class="n">species</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">,</span> <span class="n">kinetics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">rxn</span><span class="o">.</span><span class="n">r_species</span> <span class="o">+</span> <span class="n">rxn</span><span class="o">.</span><span class="n">p_species</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">spc</span><span class="o">.</span><span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arkane_spc_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="c1"># add an extra character to the arkane_species label to distinguish between species calculated</span>
+                        <span class="c1">#  for thermo and species calculated for kinetics (where we don&#39;t want to use BAC)</span>
+                        <span class="n">arkane_spc</span> <span class="o">=</span> <span class="n">arkane_input_species</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">),</span> <span class="n">spc</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_run_statmech</span><span class="p">(</span><span class="n">arkane_spc</span><span class="p">,</span> <span class="n">spc</span><span class="o">.</span><span class="n">arkane_file</span><span class="p">,</span> <span class="n">kinetics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">rxn</span><span class="o">.</span><span class="n">dh_rxn298</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">product</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">getEnthalpy</span><span class="p">(</span><span class="mi">298</span><span class="p">)</span> <span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">arkane_spc_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                                     <span class="k">if</span> <span class="n">product</span><span class="o">.</span><span class="n">label</span> <span class="ow">in</span> <span class="n">rxn</span><span class="o">.</span><span class="n">products</span><span class="p">])</span>\
+                    <span class="o">-</span> <span class="nb">sum</span><span class="p">([</span><span class="n">reactant</span><span class="o">.</span><span class="n">thermo</span><span class="o">.</span><span class="n">getEnthalpy</span><span class="p">(</span><span class="mi">298</span><span class="p">)</span> <span class="k">for</span> <span class="n">reactant</span> <span class="ow">in</span> <span class="n">arkane_spc_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                           <span class="k">if</span> <span class="n">reactant</span><span class="o">.</span><span class="n">label</span> <span class="ow">in</span> <span class="n">rxn</span><span class="o">.</span><span class="n">reactants</span><span class="p">])</span>
+                <span class="n">arkane_rxn</span> <span class="o">=</span> <span class="n">arkane_reaction</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">rxn</span><span class="o">.</span><span class="n">label</span><span class="p">),</span>
+                                             <span class="n">reactants</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">arkane_spc_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                                                        <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">rxn</span><span class="o">.</span><span class="n">reactants</span><span class="p">],</span>
+                                             <span class="n">products</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">arkane_spc_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                                                       <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">rxn</span><span class="o">.</span><span class="n">products</span><span class="p">],</span>
+                                             <span class="n">transitionState</span><span class="o">=</span><span class="n">rxn</span><span class="o">.</span><span class="n">ts_label</span><span class="p">,</span> <span class="n">tunneling</span><span class="o">=</span><span class="s1">&#39;Eckart&#39;</span><span class="p">)</span>
+                <span class="n">kinetics_job</span> <span class="o">=</span> <span class="n">KineticsJob</span><span class="p">(</span><span class="n">reaction</span><span class="o">=</span><span class="n">arkane_rxn</span><span class="p">,</span> <span class="n">Tmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t_min</span><span class="p">,</span> <span class="n">Tmax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t_max</span><span class="p">,</span> <span class="n">Tcount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t_count</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Calculating rate for reaction </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rxn</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">kinetics_job</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">output_directory</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">OverflowError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="c1"># ValueError: One or both of the barrier heights of -9.3526 and 62.683 kJ/mol encountered in Eckart</span>
+                    <span class="c1"># method are invalid.</span>
+                    <span class="c1">#</span>
+                    <span class="c1">#   File &quot;/home/alongd/Code/RMG-Py/arkane/kinetics.py&quot;, line 136, in execute</span>
+                    <span class="c1">#     self.generateKinetics(self.Tlist.value_si)</span>
+                    <span class="c1">#   File &quot;/home/alongd/Code/RMG-Py/arkane/kinetics.py&quot;, line 179, in generateKinetics</span>
+                    <span class="c1">#     klist[i] = self.reaction.calculateTSTRateCoefficient(Tlist[i])</span>
+                    <span class="c1">#   File &quot;rmgpy/reaction.py&quot;, line 818, in rmgpy.reaction.Reaction.calculateTSTRateCoefficient</span>
+                    <span class="c1">#   File &quot;rmgpy/reaction.py&quot;, line 844, in rmgpy.reaction.Reaction.calculateTSTRateCoefficient</span>
+                    <span class="c1"># OverflowError: math range error</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failed to generate kinetics for </span><span class="si">{0}</span><span class="s1"> with message:</span><span class="se">\n</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rxn</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+                    <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+                    <span class="n">rxn</span><span class="o">.</span><span class="n">kinetics</span> <span class="o">=</span> <span class="n">kinetics_job</span><span class="o">.</span><span class="n">reaction</span><span class="o">.</span><span class="n">kinetics</span>
+                    <span class="n">plotter</span><span class="o">.</span><span class="n">log_kinetics</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">output_path</span><span class="p">)</span>
+                    <span class="n">rxn</span><span class="o">.</span><span class="n">rmg_reactions</span> <span class="o">=</span> <span class="n">rmgdb</span><span class="o">.</span><span class="n">determine_rmg_kinetics</span><span class="p">(</span><span class="n">rmgdb</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rmgdb</span><span class="p">,</span> <span class="n">reaction</span><span class="o">=</span><span class="n">rxn</span><span class="o">.</span><span class="n">rmg_reaction</span><span class="p">,</span>
+                                                                     <span class="n">dh_rxn298</span><span class="o">=</span><span class="n">rxn</span><span class="o">.</span><span class="n">dh_rxn298</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
+        <span class="n">libraries_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;RMG libraries&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">species_list_for_thermo_parity</span><span class="p">:</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">draw_thermo_parity_plots</span><span class="p">(</span><span class="n">species_list_for_thermo_parity</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">save_thermo_lib</span><span class="p">(</span><span class="n">species_for_thermo_lib</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">libraries_path</span><span class="p">,</span>
+                                    <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">lib_long_desc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lib_long_desc</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">species_for_transport_lib</span><span class="p">:</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">save_transport_lib</span><span class="p">(</span><span class="n">species_for_thermo_lib</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">libraries_path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rxn_list_for_kinetics_plots</span><span class="p">:</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">draw_kinetics_plots</span><span class="p">(</span><span class="n">rxn_list_for_kinetics_plots</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">output_dir</span><span class="p">,</span>
+                                        <span class="n">t_min</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t_max</span><span class="p">,</span> <span class="n">t_count</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">t_count</span><span class="p">)</span>
+            <span class="n">plotter</span><span class="o">.</span><span class="n">save_kinetics_lib</span><span class="p">(</span><span class="n">rxn_list</span><span class="o">=</span><span class="n">rxn_list_for_kinetics_plots</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">libraries_path</span><span class="p">,</span>
+                                      <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">lib_long_desc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lib_long_desc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean_output_directory</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">unconverged_species</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;unconverged_species.log&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">unconverged_species</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">spc</span><span class="o">.</span><span class="n">is_ts</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39; rxn: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">rxn_label</span><span class="p">)))</span>
+                    <span class="k">elif</span> <span class="n">spc</span><span class="o">.</span><span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39; SMILES: </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">())))</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_run_statmech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arkane_spc</span><span class="p">,</span> <span class="n">arkane_file</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_bac</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kinetics</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A helper function for running an Arkane statmech job.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            arkane_spc (str): An Arkane species() function representor.</span>
+<span class="sd">            arkane_file (str): The path to the Arkane species file (either in .py or YAML form).</span>
+<span class="sd">            output_path (str): The path to the folder containing the Arkane output.py file.</span>
+<span class="sd">            use_bac (bool): A flag indicating whether or not to use bond additivity corrections (True to use).</span>
+<span class="sd">            kinetics (bool) A flag indicating whether this specie is part of a kinetics job.</span>
+<span class="sd">            plot (bool): A flag indicating whether to plot a PDF of the calculated thermo properties (True to plot)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the job was successful (True for successful).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">stat_mech_job</span> <span class="o">=</span> <span class="n">StatMechJob</span><span class="p">(</span><span class="n">arkane_spc</span><span class="p">,</span> <span class="n">arkane_file</span><span class="p">)</span>
+        <span class="n">stat_mech_job</span><span class="o">.</span><span class="n">applyBondEnergyCorrections</span> <span class="o">=</span> <span class="n">use_bac</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">kinetics</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_level</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">kinetics</span> <span class="ow">or</span> <span class="p">(</span><span class="n">kinetics</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_level</span><span class="p">):</span>
+            <span class="c1"># currently we have to use a model chemistry for thermo</span>
+            <span class="n">stat_mech_job</span><span class="o">.</span><span class="n">modelChemistry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp_level</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if this is a kinetics computation and we don&#39;t have a valid model chemistry, don&#39;t bother about it</span>
+            <span class="n">stat_mech_job</span><span class="o">.</span><span class="n">applyAtomEnergyCorrections</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Use the scaling factor if given, else try determining it from Arkane</span>
+        <span class="c1"># (defaults to 1 and prints a warning if not found)</span>
+        <span class="n">stat_mech_job</span><span class="o">.</span><span class="n">frequencyScaleFactor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_scale_factor</span> <span class="ow">or</span> <span class="n">assign_frequency_scale_factor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freq_level</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stat_mech_job</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">output_directory</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;output.py&#39;</span><span class="p">),</span> <span class="n">plot</span><span class="o">=</span><span class="n">plot</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">success</span>
+
+    <span class="k">def</span> <span class="nf">_clean_output_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A helper function to organize the output directory.</span>
+
+<span class="sd">            - remove redundant rotor.txt files (from kinetics jobs)</span>
+<span class="sd">            - move remaining rotor files to the rotor directory</span>
+<span class="sd">            - move the Arkane YAML file from the `species` directory to the base directory, and delete `species`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">base_folder</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Species&#39;</span><span class="p">,</span> <span class="s1">&#39;rxns&#39;</span><span class="p">]:</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">base_folder</span><span class="p">)</span>
+            <span class="n">dir_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+                <span class="n">dir_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
+                <span class="k">break</span>  <span class="c1"># don&#39;t continue to explore subdirectories</span>
+            <span class="k">for</span> <span class="n">species_label</span> <span class="ow">in</span> <span class="n">dir_names</span><span class="p">:</span>
+                <span class="n">species_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">species_label</span><span class="p">)</span>
+                <span class="n">file_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">files</span><span class="p">)</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">species_path</span><span class="p">):</span>
+                    <span class="n">file_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+                    <span class="k">break</span>  <span class="c1"># don&#39;t continue to explore subdirectories</span>
+                <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;rotor&#39;</span> <span class="ow">in</span> <span class="n">file_name</span> <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">])</span>\
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="s1">&#39;rotors&#39;</span><span class="p">)):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="s1">&#39;rotors&#39;</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;__rotor&#39;</span> <span class="ow">in</span> <span class="n">file_name</span><span class="p">:</span>  <span class="c1"># this is a duplicate `species__rotor.txt` file (with two underscores)</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="s1">&#39;_rotor&#39;</span> <span class="ow">in</span> <span class="n">file_name</span><span class="p">:</span>  <span class="c1"># move to the rotor directory</span>
+                        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">),</span>
+                                    <span class="n">dst</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="s1">&#39;rotors&#39;</span><span class="p">,</span> <span class="n">file_name</span><span class="p">))</span>
+
+                <span class="c1"># Arkane YAML files:</span>
+                <span class="n">species_yaml_base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="s1">&#39;arkane&#39;</span><span class="p">,</span> <span class="s1">&#39;species&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">species_yaml_base_path</span><span class="p">):</span>  <span class="c1"># The Arkane YAML file is here</span>
+                    <span class="n">species_yaml_files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">species_yaml_base_path</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">species_yaml_files</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">yml_file</span> <span class="ow">in</span> <span class="n">species_yaml_files</span><span class="p">:</span>
+                            <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_yaml_base_path</span><span class="p">,</span> <span class="n">yml_file</span><span class="p">),</span>
+                                        <span class="n">dst</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">species_path</span><span class="p">,</span> <span class="n">yml_file</span><span class="p">))</span>
+                    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">species_yaml_base_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Processor.copy_freq_output_for_ts"><a class="viewcode-back" href="../../api/processor.html#arc.processor.Processor.copy_freq_output_for_ts">[docs]</a>    <span class="k">def</span> <span class="nf">copy_freq_output_for_ts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copy the frequency job output file into the TS geometry folder.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">calc_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="s1">&#39;freq&#39;</span><span class="p">])</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_directory</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;rxns&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="s1">&#39;geometry&#39;</span><span class="p">,</span> <span class="s1">&#39;frequency.out&#39;</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">calc_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

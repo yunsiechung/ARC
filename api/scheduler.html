@@ -1,0 +1,1013 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>arc.scheduler &mdash; ARC 1.1.0 Documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="arc.job.job" href="job.html" />
+    <link rel="prev" title="arc.reaction" href="reaction.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> ARC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">Running ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../output.html">Output</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">ARC’s API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="main.html">arc.main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="species.html">arc.species.species</a></li>
+<li class="toctree-l2"><a class="reference internal" href="converter.html">arc.species.converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformers.html">arc.species.conformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reaction.html">arc.reaction</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">arc.scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.html">arc.job.job</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssh.html">arc.job.ssh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="local.html">arc.job.local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">arc.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotter.html">arc.plotter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processor.html">arc.processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rmgdb.html">arc.rmgdb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">arc.common</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">Standalone tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute.html">Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">How to cite ARC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licence.html">Licence</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ARC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">ARC’s API</a> &raquo;</li>
+        
+      <li>arc.scheduler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/scheduler.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-arc.scheduler">
+<span id="arc-scheduler"></span><span id="scheduler"></span><h1>arc.scheduler<a class="headerlink" href="#module-arc.scheduler" title="Permalink to this headline">¶</a></h1>
+<p>A module for scheduling jobs
+Includes spawning, terminating, checking, and troubleshooting various jobs</p>
+<dl class="class">
+<dt id="arc.scheduler.Scheduler">
+<em class="property">class </em><code class="descclassname">arc.scheduler.</code><code class="descname">Scheduler</code><span class="sig-paren">(</span><em>project</em>, <em>ess_settings</em>, <em>species_list</em>, <em>project_directory</em>, <em>composite_method=u''</em>, <em>conformer_level=u''</em>, <em>opt_level=u''</em>, <em>freq_level=u''</em>, <em>sp_level=u''</em>, <em>scan_level=u''</em>, <em>ts_guess_level=u''</em>, <em>orbitals_level=u''</em>, <em>adaptive_levels=None</em>, <em>rmgdatabase=None</em>, <em>job_types=None</em>, <em>initial_trsh=None</em>, <em>rxn_list=None</em>, <em>bath_gas=None</em>, <em>restart_dict=None</em>, <em>max_job_time=120</em>, <em>allow_nonisomorphic_2d=False</em>, <em>memory=14</em>, <em>testing=False</em>, <em>dont_gen_confs=None</em>, <em>confs_to_dft=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>ARC’s Scheduler class. Creates jobs, submits, checks status, troubleshoots.
+Each species in <cite>species_list</cite> has to have a unique label.</p>
+<p>Dictionary structures:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>job_dict = {label_1: {&#39;conformers&#39;: {0: Job1,
+                                     1: Job2, ...},  # TS guesses are considered `conformers` as well
+                      &#39;opt&#39;:        {job_name1: Job1,
+                                     job_name2: Job2, ...},
+                      &#39;sp&#39;:         {job_name1: Job1,
+                                     job_name2: Job2, ...},
+                      &#39;freq&#39;:       {job_name1: Job1,
+                                     job_name2: Job2, ...},
+                      &#39;composite&#39;:  {job_name1: Job1,
+                                     job_name2: Job2, ...},
+                      &#39;scan&#39;:       {job_name1: Job1,
+                                     job_name2: Job2, ...},
+                      ...
+                      }
+            label_2: {...},
+            }
+
+output = {label_1: {&#39;status&#39;: ``str``,  # &#39;converged&#39;, or &#39;Error: &lt;reason&gt;&#39;
+                    &#39;geo&#39;: &lt;path to geometry optimization output file&gt;,
+                    &#39;freq&#39;: &lt;path to freq output file&gt;,
+                    &#39;sp&#39;: &lt;path to sp output file&gt;,
+                    &#39;composite&#39;: &lt;path to composite output file&gt;,
+         label_2: {...},
+         }
+</pre></div>
+</div>
+<p>Note that rotor scans are located under Species.rotors_dict</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>project</strong> (<em>str</em>) – The project’s name. Used for naming the working directory.</li>
+<li><strong>ess_settings</strong> (<em>dict</em>) – A dictionary of available ESS and a corresponding server list.</li>
+<li><strong>species_list</strong> (<em>list</em>) – Contains input <a class="reference internal" href="species.html#species"><span class="std std-ref">ARCSpecies</span></a> objects (both species and TSs).</li>
+<li><strong>rxn_list</strong> (<em>list</em>) – Contains input <a class="reference internal" href="reaction.html#reaction"><span class="std std-ref">ARCReaction</span></a> objects.</li>
+<li><strong>project_directory</strong> (<em>str</em>) – Folder path for the project: the input file path or ARC/Projects/project-name.</li>
+<li><strong>composite_method</strong> (<em>str</em><em>, </em><em>optional</em>) – A composite method to use.</li>
+<li><strong>conformer_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for conformer comparisons.</li>
+<li><strong>opt_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for geometry optimizations.</li>
+<li><strong>freq_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for frequency calculations.</li>
+<li><strong>sp_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for single point energy calculations.</li>
+<li><strong>scan_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for torsion scans.</li>
+<li><strong>ts_guess_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for TS guess comparisons.</li>
+<li><strong>orbitals_level</strong> (<em>str</em><em>, </em><em>optional</em>) – The level of theory to use for calculating MOs (for plotting).</li>
+<li><strong>adaptive_levels</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary of levels of theory for ranges of the number of heavy atoms in
+the molecule. Keys are tuples of (min_num_atoms, max_num_atoms), values are
+dictionaries with ‘optfreq’ and ‘sp’ as keys and levels of theory as values.</li>
+<li><strong>rmgdatabase</strong> (<em>RMGDatabase</em><em>, </em><em>optional</em>) – The RMG database object.</li>
+<li><strong>job_types</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary of job types to execute. Keys are job types, values are boolean.</li>
+<li><strong>initial_trsh</strong> (<em>dict</em><em>, </em><em>optional</em>) – Troubleshooting methods to try by default. Keys are ESS software,
+values are trshs.</li>
+<li><strong>bath_gas</strong> (<em>str</em><em>, </em><em>optional</em>) – A bath gas. Currently used in OneDMin to calc L-J parameters.
+Allowed values are He, Ne, Ar, Kr, H2, N2, O2.</li>
+<li><strong>restart_dict</strong> (<em>dict</em><em>, </em><em>optional</em>) – A restart dictionary parsed from a YAML restart file.</li>
+<li><strong>max_job_time</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximal allowed job time on the server in hours.</li>
+<li><strong>allow_nonisomorphic_2d</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to optimize species even if they do not have a 3D conformer
+that is isomorphic to the 2D graph representation.</li>
+<li><strong>memory</strong> (<em>int</em><em>, </em><em>optional</em>) – The total allocated job memory in GB (14 by default).</li>
+<li><strong>testing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Used for internal ARC testing (generating the object w/o executing it).</li>
+<li><strong>dont_gen_confs</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of species labels for which conformer jobs were loaded from a restart
+file, and additional conformer generation should be avoided.</li>
+<li><strong>confs_to_dft</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of lowest MD conformers to DFT at the conformers_level.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.project">
+<code class="descname">project</code><a class="headerlink" href="#arc.scheduler.Scheduler.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>The project’s name. Used for naming the working directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.servers">
+<code class="descname">servers</code><a class="headerlink" href="#arc.scheduler.Scheduler.servers" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of servers used for the present project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.species_list">
+<code class="descname">species_list</code><a class="headerlink" href="#arc.scheduler.Scheduler.species_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains input <a class="reference internal" href="species.html#species"><span class="std std-ref">ARCSpecies</span></a> objects (both species and TSs).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.species_dict">
+<code class="descname">species_dict</code><a class="headerlink" href="#arc.scheduler.Scheduler.species_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keys are labels, values are <a class="reference internal" href="species.html#species"><span class="std std-ref">ARCSpecies</span></a> objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.rxn_list">
+<code class="descname">rxn_list</code><a class="headerlink" href="#arc.scheduler.Scheduler.rxn_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains input <a class="reference internal" href="reaction.html#reaction"><span class="std std-ref">ARCReaction</span></a> objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.unique_species_labels">
+<code class="descname">unique_species_labels</code><a class="headerlink" href="#arc.scheduler.Scheduler.unique_species_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of species labels (checked for duplicates).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.adaptive_levels">
+<code class="descname">adaptive_levels</code><a class="headerlink" href="#arc.scheduler.Scheduler.adaptive_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of levels of theory for ranges of the number of heavy atoms in the
+molecule. Keys are tuples of (min_num_atoms, max_num_atoms), values are
+dictionaries with ‘optfreq’ and ‘sp’ as keys and levels of theory as values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.job_dict">
+<code class="descname">job_dict</code><a class="headerlink" href="#arc.scheduler.Scheduler.job_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of all scheduled jobs. Keys are species / TS labels,
+values are dictionaries where keys are job names (corresponding to
+‘running_jobs’ if job is running) and values are the Job objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.running_jobs">
+<code class="descname">running_jobs</code><a class="headerlink" href="#arc.scheduler.Scheduler.running_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of currently running jobs (a subset of <cite>job_dict</cite>).
+Keys are species/TS label, values are lists of job names
+(e.g. ‘conformer3’, ‘opt_a123’).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.servers_jobs_ids">
+<code class="descname">servers_jobs_ids</code><a class="headerlink" href="#arc.scheduler.Scheduler.servers_jobs_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of relevant job IDs currently running on the server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.output">
+<code class="descname">output</code><a class="headerlink" href="#arc.scheduler.Scheduler.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output dictionary with status and final QM file paths for all species.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.ess_settings">
+<code class="descname">ess_settings</code><a class="headerlink" href="#arc.scheduler.Scheduler.ess_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of available ESS and a corresponding server list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.initial_trsh">
+<code class="descname">initial_trsh</code><a class="headerlink" href="#arc.scheduler.Scheduler.initial_trsh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Troubleshooting methods to try by default. Keys are ESS software, values are trshs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.restart_dict">
+<code class="descname">restart_dict</code><a class="headerlink" href="#arc.scheduler.Scheduler.restart_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A restart dictionary parsed from a YAML restart file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.project_directory">
+<code class="descname">project_directory</code><a class="headerlink" href="#arc.scheduler.Scheduler.project_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Folder path for the project: the input file path or ARC/Projects/project-name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.save_restart">
+<code class="descname">save_restart</code><a class="headerlink" href="#arc.scheduler.Scheduler.save_restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to start saving a restart file. <code class="docutils literal notranslate"><span class="pre">True</span></code> only after all species are loaded
+(otherwise saves a partial file and may cause loss of information).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.restart_path">
+<code class="descname">restart_path</code><a class="headerlink" href="#arc.scheduler.Scheduler.restart_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the <cite>restart.yml</cite> file to be saved.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.max_job_time">
+<code class="descname">max_job_time</code><a class="headerlink" href="#arc.scheduler.Scheduler.max_job_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximal allowed job time on the server in hours.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.testing">
+<code class="descname">testing</code><a class="headerlink" href="#arc.scheduler.Scheduler.testing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for internal ARC testing (generating the object w/o executing it).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.rmgdb">
+<code class="descname">rmgdb</code><a class="headerlink" href="#arc.scheduler.Scheduler.rmgdb" title="Permalink to this definition">¶</a></dt>
+<dd><p>The RMG database object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">RMGDatabase</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.allow_nonisomorphic_2d">
+<code class="descname">allow_nonisomorphic_2d</code><a class="headerlink" href="#arc.scheduler.Scheduler.allow_nonisomorphic_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to optimize species even if they do not have a 3D conformer that is
+isomorphic to the 2D graph representation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.dont_gen_confs">
+<code class="descname">dont_gen_confs</code><a class="headerlink" href="#arc.scheduler.Scheduler.dont_gen_confs" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of species labels for which conformer jobs were loaded from a restart file,
+and additional conformer generation should be avoided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.confs_to_dft">
+<code class="descname">confs_to_dft</code><a class="headerlink" href="#arc.scheduler.Scheduler.confs_to_dft" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of lowest MD conformers to DFT at the conformers_level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.memory">
+<code class="descname">memory</code><a class="headerlink" href="#arc.scheduler.Scheduler.memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>The total allocated job memory in GB (14 by default).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.job_types">
+<code class="descname">job_types</code><a class="headerlink" href="#arc.scheduler.Scheduler.job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary of job types to execute. Keys are job types, values are boolean.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.bath_gas">
+<code class="descname">bath_gas</code><a class="headerlink" href="#arc.scheduler.Scheduler.bath_gas" title="Permalink to this definition">¶</a></dt>
+<dd><p>A bath gas. Currently used in OneDMin to calc L-J parameters.
+Allowed values are He, Ne, Ar, Kr, H2, N2, O2.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="arc.scheduler.Scheduler.composite_method">
+<code class="descname">composite_method</code><a class="headerlink" href="#arc.scheduler.Scheduler.composite_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>A composite method to use.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.check_all_done">
+<code class="descname">check_all_done</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.check_all_done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.check_all_done" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that we have all required data for the species/TS in <code class="docutils literal notranslate"><span class="pre">label</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.check_freq_job">
+<code class="descname">check_freq_job</code><span class="sig-paren">(</span><em>label</em>, <em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.check_freq_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.check_freq_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a freq job converged successfully. Also checks (QA) that no imaginary frequencies were assigned for
+stable species, and that exactly one imaginary frequency was assigned for a TS.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.check_md_job">
+<code class="descname">check_md_job</code><span class="sig-paren">(</span><em>label</em>, <em>job</em>, <em>max_iterations=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.check_md_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.check_md_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the MD spawning algorithm converged on a single structure.
+If not converged, spawn another MD job (up to a maximum number of jobs).
+If it did converge, save the resulting lowest conformers and DFT them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>str</em>) – The species label.</li>
+<li><strong>job</strong> (<a class="reference internal" href="job.html#arc.job.job.Job" title="arc.job.job.Job"><em>Job</em></a>) – The Gromacs MD job to check.</li>
+<li><strong>max_iterations</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximal number of MD trials per species.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.check_negative_freq">
+<code class="descname">check_negative_freq</code><span class="sig-paren">(</span><em>label</em>, <em>job</em>, <em>vibfreqs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.check_negative_freq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.check_negative_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for determining the number of negative frequencies. Also logs appropriate errors.
+Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the number of negative frequencies is as excepted, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.check_scan_job">
+<code class="descname">check_scan_job</code><span class="sig-paren">(</span><em>label</em>, <em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.check_scan_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.check_scan_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a rotor scan job converged successfully. Also checks (QA) whether the scan is relatively “smooth”,
+and whether the optimized geometry indeed represents the minimum energy conformer.
+Recommends whether or not to use this rotor using the ‘successful_rotors’ and ‘unsuccessful_rotors’ attributes.</p>
+<p>rotors_dict structure (attribute of ARCSpecies):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>rotors_dict: {1: {&#39;pivots&#39;: pivots_list,
+                  &#39;top&#39;: top_list,
+                  &#39;scan&#39;: scan_list,
+                  &#39;success&#39;: ``bool``,
+                  &#39;invalidation_reason&#39;: ``str``,
+                  &#39;times_dihedral_set&#39;: ``int``,
+                  &#39;scan_path&#39;: &lt;path to scan output file&gt;,
+                  &#39;max_e&#39;: ``float``,  # in kJ/mol},
+                  &#39;symmetry&#39;: ``int``}
+              2: {}, ...
+             }
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.check_sp_job">
+<code class="descname">check_sp_job</code><span class="sig-paren">(</span><em>label</em>, <em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.check_sp_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.check_sp_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a single point job converged successfully.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.delete_all_species_jobs">
+<code class="descname">delete_all_species_jobs</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.delete_all_species_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.delete_all_species_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete all jobs of species/TS represented by <cite>label</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.determine_adaptive_level">
+<code class="descname">determine_adaptive_level</code><span class="sig-paren">(</span><em>original_level_of_theory</em>, <em>job_type</em>, <em>heavy_atoms</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.determine_adaptive_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.determine_adaptive_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the level of theory to be used according to the job type and number of heavy atoms.
+self.adaptive_levels is a dictionary of levels of theory for ranges of the number of heavy atoms in the
+molecule. Keys are tuples of (min_num_atoms, max_num_atoms), values are dictionaries with ‘optfreq’ and ‘sp’
+as keys and levels of theory as values. ‘inf’ is accepted an max_num_atoms.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.determine_most_likely_ts_conformer">
+<code class="descname">determine_most_likely_ts_conformer</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.determine_most_likely_ts_conformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.determine_most_likely_ts_conformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the most likely TS conformer.
+Save the resulting xyz as <cite>initial_xyz</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.determine_most_stable_conformer">
+<code class="descname">determine_most_stable_conformer</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.determine_most_stable_conformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.determine_most_stable_conformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the most stable conformer for a species (which is not a TS).
+Also run an isomorphism check.
+Save the resulting xyz as <cite>initial_xyz</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.end_job">
+<code class="descname">end_job</code><span class="sig-paren">(</span><em>job</em>, <em>label</em>, <em>job_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.end_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.end_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for checking job status, saving in csv file, and downloading output files.
+Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if job terminated successfully on the server, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.get_servers_jobs_ids">
+<code class="descname">get_servers_jobs_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.get_servers_jobs_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.get_servers_jobs_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check status on all active servers, return a list of relevant running job IDs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.make_reaction_labels_info_file">
+<code class="descname">make_reaction_labels_info_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.make_reaction_labels_info_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.make_reaction_labels_info_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for creating the <cite>reactions labels.info</cite> file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.parse_composite_geo">
+<code class="descname">parse_composite_geo</code><span class="sig-paren">(</span><em>label</em>, <em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.parse_composite_geo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.parse_composite_geo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a ‘composite’ job converged successfully, and parse the geometry into <cite>final_xyz</cite>.
+Also checks (QA) that no imaginary frequencies were assigned for stable species,
+and that exactly one imaginary frequency was assigned for a TS.
+Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the job converged successfully, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise and troubleshoots.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.parse_conformer">
+<code class="descname">parse_conformer</code><span class="sig-paren">(</span><em>job</em>, <em>label</em>, <em>i</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.parse_conformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.parse_conformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse E0 (kJ/mol) from the conformer opt output file.
+For species, save it in the Species.conformer_energies attribute.
+Fot TSs, save it in the TSGuess.energy attribute, and also parse the geometry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.parse_opt_geo">
+<code class="descname">parse_opt_geo</code><span class="sig-paren">(</span><em>label</em>, <em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.parse_opt_geo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.parse_opt_geo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an ‘opt’ or ‘optfreq’ job converged successfully, and parse the geometry into <cite>final_xyz</cite>.
+If the job is ‘optfreq’, also checks (QA) that no imaginary frequencies were assigned for stable species,
+and that exactly one imaginary frequency was assigned for a TS.
+Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the job (or both jobs) converged successfully, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise and troubleshoots opt.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.process_conformers">
+<code class="descname">process_conformers</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.process_conformers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.process_conformers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process the generated conformers and spawn DFT jobs at the conformer_level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.restore_running_jobs">
+<code class="descname">restore_running_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.restore_running_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.restore_running_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make Job objects for jobs which were running in the previous session.
+Important for the restart feature so long jobs won’t be ran twice.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_composite_job">
+<code class="descname">run_composite_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_composite_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_composite_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn a composite job (e.g., CBS-QB3) using ‘final_xyz’ for species ot TS ‘label’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_conformer_jobs">
+<code class="descname">run_conformer_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_conformer_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_conformer_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the most stable conformer for each species using molecular dynamics (force fields) and subsequently
+spawning opt jobs at the conformer level of theory, usually a reasonable yet cheap DFT, e.g., b97d3/6-31+g(d,p).
+The resulting conformer is saved in a string format xyz in the Species initial_xyz attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_force_field_fit_job">
+<code class="descname">run_force_field_fit_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_force_field_fit_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_force_field_fit_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn a force field parameter fitting job (currently only Gaussian is supported for this task).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_freq_job">
+<code class="descname">run_freq_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_freq_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_freq_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn a freq job using ‘final_xyz’ for species ot TS ‘label’.
+If this was originally a composite job, run an appropriate separate freq job outputting the Hessian.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_gromacs_job">
+<code class="descname">run_gromacs_job</code><span class="sig-paren">(</span><em>label</em>, <em>confs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_gromacs_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_gromacs_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a Gromacs MD job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>str</em>) – The species label.</li>
+<li><strong>confs</strong> (<em>str</em>) – The path to a YAML file with array-format coordinates to optimize.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_job">
+<code class="descname">run_job</code><span class="sig-paren">(</span><em>label</em>, <em>xyz</em>, <em>level_of_theory</em>, <em>job_type</em>, <em>fine=False</em>, <em>software=None</em>, <em>shift=u''</em>, <em>trsh=u''</em>, <em>memory=None</em>, <em>conformer=-1</em>, <em>ess_trsh_methods=None</em>, <em>scan=u''</em>, <em>pivots=None</em>, <em>occ=None</em>, <em>scan_trsh=u''</em>, <em>scan_res=None</em>, <em>max_job_time=None</em>, <em>confs=None</em>, <em>radius=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for running (all) jobs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_onedmin_job">
+<code class="descname">run_onedmin_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_onedmin_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_onedmin_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn a lennard-jones calculation using OneDMin</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_opt_job">
+<code class="descname">run_opt_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_opt_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_opt_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn a geometry optimization job. The initial guess is taken from the <cite>initial_xyz</cite> attribute.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_orbitals_job">
+<code class="descname">run_orbitals_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_orbitals_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_orbitals_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn orbitals job used for molecular orbital visualization
+Currently supporting QChem for printing the orbitals, the output could be visualized using IQMol</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_scan_jobs">
+<code class="descname">run_scan_jobs</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_scan_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_scan_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn rotor scan jobs using ‘final_xyz’ for species or TS ‘label’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_sp_job">
+<code class="descname">run_sp_job</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_sp_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_sp_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn a single point job using ‘final_xyz’ for species ot TS ‘label’.
+If the method is MRCI, first spawn a simple CCSD job, and use orbital determination to run the MRCI job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.run_ts_conformer_jobs">
+<code class="descname">run_ts_conformer_jobs</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.run_ts_conformer_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.run_ts_conformer_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spawn opt jobs at the ts_guesses level of theory for the TS guesses</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.save_restart_dict">
+<code class="descname">save_restart_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.save_restart_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.save_restart_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the restart_dict and save the restart.yml file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.schedule_jobs">
+<code class="descname">schedule_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.schedule_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.schedule_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main job scheduling block</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.spawn_md_jobs">
+<code class="descname">spawn_md_jobs</code><span class="sig-paren">(</span><em>label</em>, <em>prev_conf_list=None</em>, <em>num_confs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.spawn_md_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.spawn_md_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Embed conformers and run a molecular dynamics optimization using a fitted force field.
+Then generate conformers using combinations of the detected torsion wells, and re-run until converging.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>label</strong> (<em>str</em>) – The species label.</li>
+<li><strong>prev_conf_list</strong> (<em>list</em><em>, </em><em>optional</em>) – The previous conformers (entries are two length lists, not dicts).
+If not given, a first Gromacs job will be spawned.</li>
+<li><strong>num_confs</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of conformers to generate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.troubleshoot_ess">
+<code class="descname">troubleshoot_ess</code><span class="sig-paren">(</span><em>label</em>, <em>job</em>, <em>level_of_theory</em>, <em>job_type</em>, <em>conformer=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.troubleshoot_ess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.troubleshoot_ess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Troubleshoot issues related to the electronic structure software, such as conversion</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.troubleshoot_negative_freq">
+<code class="descname">troubleshoot_negative_freq</code><span class="sig-paren">(</span><em>label</em>, <em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.troubleshoot_negative_freq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.troubleshoot_negative_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Troubleshooting cases where stable species (not TS’s) have negative frequencies.
+We take  +/-1.1 displacements, generating several initial geometries, and running them as conformers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.troubleshoot_opt_jobs">
+<code class="descname">troubleshoot_opt_jobs</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.troubleshoot_opt_jobs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.troubleshoot_opt_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>We’re troubleshooting for opt jobs.
+First check for server status and troubleshoot if needed. Then check for ESS status and troubleshoot
+if needed. Finally, check whether or not the last job had fine=True, add if it didn’t run with fine.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arc.scheduler.Scheduler.troubleshoot_scan_job">
+<code class="descname">troubleshoot_scan_job</code><span class="sig-paren">(</span><em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.troubleshoot_scan_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.troubleshoot_scan_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try freezing all dihedrals other than the scan’s pivots for this job</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="arc.scheduler.sum_time_delta">
+<code class="descclassname">arc.scheduler.</code><code class="descname">sum_time_delta</code><span class="sig-paren">(</span><em>timedelta_list</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#sum_time_delta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.sum_time_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>A helper function for summing datetime.timedelta objects</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.html" class="btn btn-neutral float-right" title="arc.job.job" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="reaction.html" class="btn btn-neutral float-left" title="arc.reaction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2019, Alon Grinberg Dana
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
