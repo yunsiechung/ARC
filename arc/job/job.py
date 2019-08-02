@@ -938,44 +938,50 @@ $end
             lines = f.readlines()
             if self.software == 'gaussian':
                 for line in lines[-1:-20:-1]:
-                    if 'Normal termination of Gaussian' in line:
-                        break
-                else:
-                    for line in lines[::-1]:
-                        if 'Error' in line or 'NtrErr' in line or 'Erroneous' in line or 'malloc' in line\
-                                or 'galloc' in line:
-                            reason = ''
-                            if 'l9999.exe' in line or 'l103.exe' in line:
-                                return 'unconverged'
-                            elif 'l502.exe' in line:
-                                return 'unconverged SCF'
-                            elif 'l103.exe' in line:
-                                return 'l103 internal coordinate error'
-                            elif 'Erroneous write' in line or 'Write error in NtrExt1' in line:
-                                reason = 'Ran out of disk space.'
-                            elif 'l716.exe' in line:
-                                reason = 'Angle in z-matrix outside the allowed range 0 < x < 180.'
-                            elif 'l301.exe' in line:
-                                reason = 'Input Error. Either charge, multiplicity, or basis set was not specified ' \
-                                         'correctly. Or, an atom specified does not match any standard atomic symbol.'
-                            elif 'NtrErr Called from FileIO' in line:
-                                reason = 'Operation on .chk file was specified, but .chk was not found.'
-                            elif 'l101.exe' in line:
-                                reason = 'Input Error. The blank line after the coordinate section is missing, ' \
-                                         'or charge/multiplicity was not specified correctly.'
-                            elif 'l202.exe' in line:
-                                reason = 'During the optimization process, either the standard orientation ' \
-                                         'or the point group of the molecule has changed.'
-                            elif 'l401.exe' in line:
-                                reason = '"Basis set data is not on the checkpoint file", or' \
-                                         ' "The projection from the old to the new basis set has failed."'
-                            elif 'malloc failed' in line or 'galloc' in line:
-                                reason = 'Memory allocation failed (did you ask for too much?)'
-                            elif 'A SYNTAX ERROR WAS DETECTED' in line:
-                                reason = 'Check .inp carefully for syntax errors in keywords.'
-                            return 'errored: {0}; {1}'.format(line, reason)
-                    return 'errored: Unknown reason'
-                return 'done'
+                    if 'termination' in line:
+                        if 'Normal' in line:
+                            return 'done'
+                        elif 'l9999.exe' or 'link 9999' in line:
+                            return 'unconverged'
+                        elif 'l101.exe' in line:
+                            reason = 'Input Error. The blank line after the coordinate section is missing, ' \
+                                     'or charge/multiplicity was not specified correctly.'
+                        elif 'l103.exe' in line:
+                            return 'l103 internal coordinate error'
+                        elif 'l108.exe' in line:
+                            reason = 'Input Error. There are two blank lines between z-matrix and the '\
+                                     'the variables.'
+                        elif 'l202.exe' in line:
+                            reason = 'Input Error. The z-matrix was not correctly specified, or the symmetry ' \
+                                     'of the z-matrix was wrongly formulated.'
+                        elif 'l301.exe' in line:
+                            reason = 'Input Error. Either charge, multiplicity, or basis set was not specified.' \
+                        elif 'l401.exe' in line:
+                            reason = 'Basis set data is not on the checkpoint file", or'\
+                                     ' the projection from the old to the new basis set has failed.'
+                        elif 'l502.exe' in line:
+                            return 'unconverged SCF'
+                        elif 'l716.exe' in line:
+                            reason = 'Angle in z-matrix outside the allowed range 0 < x < 180.' \
+                                     'correctly. Or, an atom specified does not match any standard atomic symbol.'
+                        elif 'l906.exe' in line:
+                            reason = 'MP2 calculation has failed. Maybe related to the pseudopotential basis sets.'
+                        else
+                            reason = 'Gaussian job was terminated with unknown reason'
+                    elif 'NtrErr' in line:
+                        reason = 'Operation on .chk file was specified, but .chk was not found.'
+                    elif 'malloc failed' or 'galloc' in line:
+                        reason =  'Memory allocation failed (did you ask for too much?)'
+                    elif 'A SYNTAX ERROR WAS DETECTED' in line:
+                        reason = 'Check .inp carefully for syntax errors in keywords.'
+                    elif 'Erroneous write' in line or 'Write error in NtrExt1' in line:
+                        reason = 'Ran out of disk space.'
+                    elif 'PGFIO/stdio: No such file or directory' in line:
+                        reason = 'Wrongly specified the scratch directory.'
+                    else:
+                        reason = 'Gaussian job did not terminated correctly. It was .' \
+                                 'possible to have node failure or job exceeding the time limit.'
+                    return 'errored: {0}; {1}'.format(line, reason)
             elif self.software == 'qchem':
                 done = False
                 error_message = ''
