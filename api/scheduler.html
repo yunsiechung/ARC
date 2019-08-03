@@ -215,7 +215,7 @@ output = {label_1: {&#39;status&#39;: ``str``,  # &#39;converged&#39;, or &#39;E
          }
 </pre></div>
 </div>
-<p>Note that rotor scans are located under Species.rotors_dict</p>
+<p>Note: The rotor scan dicts are located under Species.rotors_dict</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -250,7 +250,7 @@ that is isomorphic to the 2D graph representation.</li>
 <li><strong>memory</strong> (<em>int</em><em>, </em><em>optional</em>) – The total allocated job memory in GB (14 by default).</li>
 <li><strong>testing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Used for internal ARC testing (generating the object w/o executing it).</li>
 <li><strong>dont_gen_confs</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of species labels for which conformer jobs were loaded from a restart
-file, and additional conformer generation should be avoided.</li>
+file, or user-requested. Additional conformer generation should be avoided.</li>
 <li><strong>confs_to_dft</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of lowest MD conformers to DFT at the conformers_level.</li>
 </ul>
 </td>
@@ -377,8 +377,7 @@ values are dictionaries where keys are job names (corresponding to
 <dt id="arc.scheduler.Scheduler.running_jobs">
 <code class="descname">running_jobs</code><a class="headerlink" href="#arc.scheduler.Scheduler.running_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dictionary of currently running jobs (a subset of <cite>job_dict</cite>).
-Keys are species/TS label, values are lists of job names
-(e.g. ‘conformer3’, ‘opt_a123’).</p>
+Keys are species/TS label, values are lists of job names (e.g. ‘conformer3’, ‘opt_a123’).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -563,7 +562,7 @@ isomorphic to the 2D graph representation.</p>
 <dt id="arc.scheduler.Scheduler.dont_gen_confs">
 <code class="descname">dont_gen_confs</code><a class="headerlink" href="#arc.scheduler.Scheduler.dont_gen_confs" title="Permalink to this definition">¶</a></dt>
 <dd><p>A list of species labels for which conformer jobs were loaded from a restart file,
-and additional conformer generation should be avoided.</p>
+or user-requested. Additional conformer generation should be avoided for them.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -792,7 +791,8 @@ Returns <code class="docutils literal notranslate"><span class="pre">True</span>
 <dl class="method">
 <dt id="arc.scheduler.Scheduler.process_conformers">
 <code class="descname">process_conformers</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.process_conformers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.process_conformers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process the generated conformers and spawn DFT jobs at the conformer_level.</p>
+<dd><p>Process the generated conformers and spawn DFT jobs at the conformer_level.
+If more than one conformer is available, they will be optimized at the DFT conformer_level.</p>
 </dd></dl>
 
 <dl class="method">
@@ -947,8 +947,23 @@ if needed. Finally, check whether or not the last job had fine=True, add if it d
 
 <dl class="method">
 <dt id="arc.scheduler.Scheduler.troubleshoot_scan_job">
-<code class="descname">troubleshoot_scan_job</code><span class="sig-paren">(</span><em>job</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.troubleshoot_scan_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.troubleshoot_scan_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Try freezing all dihedrals other than the scan’s pivots for this job</p>
+<code class="descname">troubleshoot_scan_job</code><span class="sig-paren">(</span><em>job</em>, <em>method=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/arc/scheduler.html#Scheduler.troubleshoot_scan_job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#arc.scheduler.Scheduler.troubleshoot_scan_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Troubleshooting rotor scans
+Using the following methods: freezing all dihedrals other than the scan’s pivots for this job,
+or increasing the scan resolution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job</strong> (<a class="reference internal" href="job.html#arc.job.job.Job" title="arc.job.job.Job"><em>Job</em></a>) – The scan Job object.</li>
+<li><strong>method</strong> (<em>list</em>) – The troubleshooting method/s to try.
+Optional values: ‘freeze’, ‘inc_res’.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
