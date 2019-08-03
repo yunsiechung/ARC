@@ -241,7 +241,7 @@ isn’t set, and ARC will use the default in settings.py unless directed otherwi
 </div>
 <p>Note that for composite methods the default <code class="docutils literal notranslate"><span class="pre">freq_level</span></code> and <code class="docutils literal notranslate"><span class="pre">scan_level</span></code> may have different
 default values than for non-composite methods (defined in settings.py). Yes, an independent
-frequencies calculation job is executed afte a composite job just so that the Hamiltonian will
+frequencies calculation job is executed after a composite job just so that the Hamiltonian will
 be outputted.</p>
 <p>The same example as above ran via the API (e.g., in <a class="reference external" href="https://jupyter.org/">Jupyter notebooks</a>) would look like the following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">arc</span> <span class="k">import</span> <span class="n">ARC</span>
@@ -315,6 +315,8 @@ be outputted.</p>
       <span class="o">-</span> <span class="n">TS3</span><span class="o">/</span><span class="mf">4.</span><span class="n">gjf</span>
 </pre></div>
 </div>
+<p>In the above example we’re using <cite>.gjf</cite> files (Gaussian job files) that contain the coordinate guesses.
+You could define <code class="docutils literal notranslate"><span class="pre">xyz</span></code> using various forms, see <a href="#id5"><span class="problematic" id="id6">`Flexible coordinates (xyz) input`__</span></a>.</p>
 <p>Note that the main difference is the <code class="docutils literal notranslate"><span class="pre">is_ts</span></code> flag which is set to <cite>True</cite> (it is <cite>False</cite> by default).</p>
 </div>
 </div>
