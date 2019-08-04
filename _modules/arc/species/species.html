@@ -182,7 +182,7 @@
 <span class="kn">from</span> <span class="nn">rmgpy.exceptions</span> <span class="k">import</span> <span class="n">InvalidAdjacencyListError</span>
 
 <span class="kn">from</span> <span class="nn">arc.common</span> <span class="k">import</span> <span class="n">get_logger</span><span class="p">,</span> <span class="n">get_atom_radius</span><span class="p">,</span> <span class="n">determine_symmetry</span>
-<span class="kn">from</span> <span class="nn">arc.arc_exceptions</span> <span class="k">import</span> <span class="n">SpeciesError</span><span class="p">,</span> <span class="n">RotorError</span><span class="p">,</span> <span class="n">InputError</span><span class="p">,</span> <span class="n">TSError</span>
+<span class="kn">from</span> <span class="nn">arc.arc_exceptions</span> <span class="k">import</span> <span class="n">SpeciesError</span><span class="p">,</span> <span class="n">RotorError</span><span class="p">,</span> <span class="n">InputError</span><span class="p">,</span> <span class="n">TSError</span><span class="p">,</span> <span class="n">SanitizationError</span>
 <span class="kn">from</span> <span class="nn">arc.settings</span> <span class="k">import</span> <span class="n">default_ts_methods</span><span class="p">,</span> <span class="n">valid_chars</span><span class="p">,</span> <span class="n">minimum_barrier</span>
 <span class="kn">from</span> <span class="nn">arc.parser</span> <span class="k">import</span> <span class="n">parse_xyz_from_file</span><span class="p">,</span> <span class="n">parse_dipole_moment</span><span class="p">,</span> <span class="n">parse_polarizability</span><span class="p">,</span> <span class="n">process_conformers_file</span>
 <span class="kn">from</span> <span class="nn">arc.species.converter</span> <span class="k">import</span> <span class="n">get_xyz_string</span><span class="p">,</span> <span class="n">get_xyz_matrix</span><span class="p">,</span> <span class="n">rdkit_conf_from_mol</span><span class="p">,</span> <span class="n">standardize_xyz_string</span><span class="p">,</span>\
@@ -332,6 +332,9 @@
 <span class="sd">                           with the fitted force field (recommended for drug-like species and species with many</span>
 <span class="sd">                           heteroatoms). Another option is specifying &#39;cheap&#39;, and the &quot;old&quot; RDKit embedding method</span>
 <span class="sd">                           will be used.</span>
+<span class="sd">        conf_is_isomorphic (bool): Whether the lowest conformer is isomorphic with the 2D graph representation</span>
+<span class="sd">                                   of the species. `True` if it is. Defaults to `None`. If `True`, an isomorphism check</span>
+<span class="sd">                                   will be strictly enforced for the final optimized coordinates.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_ts</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rmg_species</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xyz</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -378,6 +381,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">e_elect</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">arkane_file</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">svpfit_output_file</span> <span class="o">=</span> <span class="n">svpfit_output_file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conf_is_isomorphic</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ts</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ts_methods</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ts_methods</span> <span class="o">=</span> <span class="n">default_ts_methods</span>
@@ -610,6 +614,8 @@
         <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;external_symmetry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_symmetry</span>
         <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;optical_isomers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optical_isomers</span>
         <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;neg_freqs_trshed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_freqs_trshed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf_is_isomorphic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;conf_is_isomorphic&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf_is_isomorphic</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_corrections</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;bond_corrections&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_corrections</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -662,6 +668,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_xyz</span> <span class="o">=</span> <span class="n">standardize_xyz_string</span><span class="p">(</span><span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;initial_xyz&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="s1">&#39;initial_xyz&#39;</span> <span class="ow">in</span> <span class="n">species_dict</span>\
             <span class="k">else</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_xyz</span> <span class="o">=</span> <span class="n">standardize_xyz_string</span><span class="p">(</span><span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;final_xyz&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="s1">&#39;final_xyz&#39;</span> <span class="ow">in</span> <span class="n">species_dict</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conf_is_isomorphic</span> <span class="o">=</span> <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;conf_is_isomorphic&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;conf_is_isomorphic&#39;</span> <span class="ow">in</span> <span class="n">species_dict</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_ts</span> <span class="o">=</span> <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;is_ts&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;is_ts&#39;</span> <span class="ow">in</span> <span class="n">species_dict</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ts</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ts_conf_spawned</span> <span class="o">=</span> <span class="n">species_dict</span><span class="p">[</span><span class="s1">&#39;ts_conf_spawned&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;ts_conf_spawned&#39;</span> <span class="ow">in</span> <span class="n">species_dict</span> <span class="k">else</span> <span class="kc">False</span>
@@ -1144,7 +1151,54 @@
             <span class="n">polarizability</span><span class="o">=</span><span class="n">polar</span><span class="p">,</span>
             <span class="n">rotrelaxcollnum</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="c1"># rotational relaxation collision number at 298 K</span>
             <span class="n">comment</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">comment</span><span class="p">)</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ARCSpecies.check_final_xyz_isomorphism"><a class="viewcode-back" href="../../../api/species.html#arc.species.species.ARCSpecies.check_final_xyz_isomorphism">[docs]</a>    <span class="k">def</span> <span class="nf">check_final_xyz_isomorphism</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">allow_nonisomorphic_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check whether the perception of self.final_xyz is isomorphic with self.mol.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            allow_nonisomorphic_2d (bool): Whether to continue spawning jobs for the species even if this test fails.</span>
+<span class="sd">                                           `True` to allow (default is `False`).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the perception of self.final_xyz is isomorphic with self.mol, `True` if it is.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">passed_test</span><span class="p">,</span> <span class="n">return_value</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">b_mol</span> <span class="o">=</span> <span class="n">molecules_from_xyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_xyz</span><span class="p">,</span> <span class="n">multiplicity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">charge</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">except</span> <span class="n">SanitizationError</span><span class="p">:</span>
+                <span class="n">b_mol</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">b_mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">is_isomorphic</span> <span class="o">=</span> <span class="n">check_isomorphism</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">,</span> <span class="n">b_mol</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">is_isomorphic</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">is_isomorphic</span><span class="p">:</span>
+                <span class="n">passed_test</span><span class="p">,</span> <span class="n">return_value</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># isomorphism test failed</span>
+                <span class="n">passed_test</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">conf_is_isomorphic</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">allow_nonisomorphic_2d</span><span class="p">:</span>
+                        <span class="c1"># conformer was isomorphic, we **do** allow nonisomorphism, and the optimized structure isn&#39;t</span>
+                        <span class="n">return_value</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># conformer was isomorphic, we don&#39;t allow nonisomorphism, but the optimized structure isn&#39;t</span>
+                        <span class="n">return_value</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># conformer was not isomorphic, don&#39;t strictly enforce isomorphism here</span>
+                    <span class="n">return_value</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">passed_test</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The optimized geometry of species </span><span class="si">{0}</span><span class="s1"> is not isomorphic with the 2D structure </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="o">.</span><span class="n">toSMILES</span><span class="p">()))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">return_value</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Not spawning additional jobs for this species!&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Species </span><span class="si">{0}</span><span class="s1"> was found to be isomorphic with the perception of its optimized coordinates.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Cannot check isomorphism for species </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">return_value</span></div></div>
 
 
 <div class="viewcode-block" id="TSGuess"><a class="viewcode-back" href="../../../api/species.html#arc.species.species.TSGuess">[docs]</a><span class="k">class</span> <span class="nc">TSGuess</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
