@@ -34,11 +34,11 @@ import string
 #    },
 # }
 servers = {
-    'server1': {
+    'pharos': {
         'cluster_soft': 'OGE',
-        'address': 'server1.host.edu',
-        'un': '<username>',
-        'key': 'path_to_rsa_key',
+        'address': 'pharos.mit.edu',
+        'un': 'yunsie',
+        'key': '/home/yunsie/.ssh/id_rsa',
     },
     'server2': {
         'cluster_soft': 'Slurm',
@@ -58,7 +58,7 @@ servers = {
 # An ordered list of servers indicates priority
 # Keeping this dictionary empty will cause ARC to scan for software on the servers defined above
 global_ess_settings = {
-    'gaussian': ['local', 'server2'],
+    'gaussian': 'pharos',
     'molpro': 'server2',
     'qchem': 'server1',
     'onedmin': 'server1',
@@ -119,8 +119,8 @@ default_levels_of_theory = {'conformer': 'b97d3/6-31+g(d,p)',
                             'opt': 'wb97xd/6-311++g(d,p)',
                             'freq': 'wb97xd/6-311++g(d,p)',  # should be the same level as opt (to calc freq at min E)
                             'scan': 'b97d3/6-31+g(d,p)',  # should be the same level as freq (to project out rotors)
-                            'sp': 'ccsd(t)-f12/cc-pvtz-f12',  # This should be a level for which BAC is available
-                            # 'sp': 'b3lyp/6-311+g(3df,2p)',
+                            # 'sp': 'ccsd(t)-f12/cc-pvtz-f12',  # This should be a level for which BAC is available
+                            'sp': 'b3lyp/6-311+g(3df,2p)',
                             'orbitals': 'wb97x-d3/6-311++g(d,p)',  # save orbitals for visualization
                             'scan_for_composite': 'B3LYP/CBSB7',  # This is the frequency level of the CBS-QB3 method
                             'freq_for_composite': 'B3LYP/CBSB7',  # This is the frequency level of the CBS-QB3 method
