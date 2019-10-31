@@ -96,7 +96,7 @@ rm -rf $WorkDir
 """,
     },
 
-    'rmg': {
+    'local': {
         # Gaussian 16
         'gaussian': """#!/bin/bash -l
 #SBATCH -p long

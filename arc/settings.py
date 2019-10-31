@@ -49,8 +49,8 @@ servers = {
         'memory': 128,  # amount of memory per node in GB, optional (default: 16)
     },
     'local': {
-        'cluster_soft': 'OGE',
-        'un': '<username>',
+        'cluster_soft': 'Slurm',
+        'un': 'yunsie',
     },
 }
 
