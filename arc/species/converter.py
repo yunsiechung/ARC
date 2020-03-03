@@ -1648,7 +1648,7 @@ def compare_zmats(z1, z2, r_tol=0.01, a_tol=2, d_tol=2, verbose=False, symmetric
 def compare_confs(xyz1: dict,
                   xyz2: dict,
                   rtol: float = 1e-5,
-                  atol: float = 1e-5,
+                  atol: float = 1e-1,
                   ) -> bool:
     """
     Compare two Cartesian coordinates representing conformers using distance matrices.
